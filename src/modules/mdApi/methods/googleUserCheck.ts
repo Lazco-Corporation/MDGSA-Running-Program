@@ -37,7 +37,27 @@ const googleUserResponseSchema = z.discriminatedUnion("user_identity", [
   studentSchema,
   alumniSchema,
 ]);
-export type GoogleUserCheckResponse = z.infer<typeof googleUserResponseSchema>;
+export type GoogleUserCheckResponse =
+  | {
+      mail: string;
+      userName: string;
+      code: string;
+      className: string | null;
+      userIdentity: "teach";
+    }
+  | {
+      mail: string;
+      userName: string;
+      code: string;
+      className: string;
+      userIdentity: "stu";
+    }
+  | {
+      mail: string;
+      userName: string;
+      userJob: string;
+      userIdentity: "alu";
+    };
 
 export async function googleUserCheck(
   options: GoogleUserCheckOptions,
@@ -65,8 +85,8 @@ export async function googleUserCheck(
         if (response.data === false) {
           throw new ClientError(
             {
-              errObj: { email },
-              errMsg: "User not found",
+              errorObject: { email },
+              errorMessage: "User not found",
             },
             HttpStatus.NOT_FOUND,
           );
@@ -77,7 +97,36 @@ export async function googleUserCheck(
       }
 
       try {
-        return googleUserResponseSchema.parse(parsedResponseData);
+        const parsedData = googleUserResponseSchema.parse(parsedResponseData);
+
+        switch (parsedData.user_identity) {
+          case "teach": {
+            return {
+              mail: parsedData.mail,
+              userName: parsedData.user_name,
+              code: parsedData.code,
+              className: parsedData.class_name,
+              userIdentity: "teach",
+            };
+          }
+          case "stu": {
+            return {
+              mail: parsedData.mail,
+              userName: parsedData.user_name,
+              code: parsedData.code,
+              className: parsedData.class_name,
+              userIdentity: "stu",
+            };
+          }
+          case "alu": {
+            return {
+              mail: parsedData.mail,
+              userName: parsedData.user_name,
+              userJob: parsedData.user_job,
+              userIdentity: "alu",
+            };
+          }
+        }
       } catch (error) {
         if (isZodError(error)) {
           throw new Error("Response data does not match expected schema");
@@ -95,7 +144,7 @@ export async function googleUserCheck(
 
     throw new ClientError(
       {
-        errMsg: "Failed to check Google user",
+        errorMessage: "Failed to check Google user",
       },
       HttpStatus.INTERNAL_SERVER_ERROR,
     );
