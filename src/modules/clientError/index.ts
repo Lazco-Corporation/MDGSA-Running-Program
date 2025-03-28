@@ -8,15 +8,15 @@ import { HttpStatus } from "../http/statusCodes";
 export class ClientError extends Error {
   __type__ = "CLIENT_ERROR";
   payload?: {
-    errObj?: object;
-    errMsg?: string;
+    errorObject?: object;
+    errorMessage?: string;
   };
   code?: HttpStatus;
 
   constructor(
     payload?: {
-      errObj?: object;
-      errMsg?: string;
+      errorObject?: object;
+      errorMessage?: string;
     },
     code?: HttpStatus,
   ) {
