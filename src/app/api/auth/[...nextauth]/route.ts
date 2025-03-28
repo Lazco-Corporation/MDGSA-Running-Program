@@ -2,11 +2,25 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 const handler = NextAuth({
-  secret: process.env.NEXTAUTH_SECRET!,
+  secret:
+    process.env.NEXTAUTH_SECRET ||
+    (() => {
+      throw new Error("Error loading env: NEXTAUTH_SECRET is not defined");
+    })(),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId:
+        process.env.GOOGLE_CLIENT_ID ||
+        (() => {
+          throw new Error("Error loading env: GOOGLE_CLIENT_ID is not defined");
+        })(),
+      clientSecret:
+        process.env.GOOGLE_CLIENT_SECRET ||
+        (() => {
+          throw new Error(
+            "Error loading env: GOOGLE_CLIENT_SECRET is not defined",
+          );
+        })(),
     }),
   ],
   callbacks: {
