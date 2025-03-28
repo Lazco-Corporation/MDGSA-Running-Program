@@ -1,0 +1,88 @@
+import { ClassInfo } from "../..";
+
+export const seniorHighClasses: ClassInfo[] = [
+  {
+    code: "X12001",
+    name: "高三1",
+    value: "X12001@X31",
+    suffix: "X31",
+    displayText: "高三1 (X12001)",
+  },
+  {
+    code: "X12002",
+    name: "高三2",
+    value: "X12002@X32",
+    suffix: "X32",
+    displayText: "高三2 (X12002)",
+  },
+  {
+    code: "X12003",
+    name: "高三3",
+    value: "X12003@X33",
+    suffix: "X33",
+    displayText: "高三3 (X12003)",
+  },
+  {
+    code: "X12004",
+    name: "高三4",
+    value: "X12004@X34",
+    suffix: "X34",
+    displayText: "高三4 (X12004)",
+  },
+  {
+    code: "X12005",
+    name: "高三5",
+    value: "X12005@X35",
+    suffix: "X35",
+    displayText: "高三5 (X12005)",
+  },
+  {
+    code: "X12006",
+    name: "高三6",
+    value: "X12006@X36",
+    suffix: "X36",
+    displayText: "高三6 (X12006)",
+  },
+  {
+    code: "X12007",
+    name: "高三7",
+    value: "X12007@X37",
+    suffix: "X37",
+    displayText: "高三7 (X12007)",
+  },
+  {
+    code: "X12008",
+    name: "高三8",
+    value: "X12008@X38",
+    suffix: "X38",
+    displayText: "高三8 (X12008)",
+  },
+  {
+    code: "X12009",
+    name: "高三9",
+    value: "X12009@X39",
+    suffix: "X39",
+    displayText: "高三9 (X12009)",
+  },
+  {
+    code: "X12010",
+    name: "高三10",
+    value: "X12010@X310",
+    suffix: "X310",
+    displayText: "高三10 (X12010)",
+  },
+  {
+    code: "X12011",
+    name: "高三11",
+    value: "X12011@X311",
+    suffix: "X311",
+    displayText: "高三11 (X12011)",
+  },
+  {
+    code: "X12012",
+    name: "高三12",
+    value: "X12012@X312",
+    suffix: "X312",
+    displayText: "高三12 (X12012)",
+  },
+];
