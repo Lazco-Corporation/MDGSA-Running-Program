@@ -3,6 +3,7 @@ import { z, ZodError } from "zod";
 
 import { ClientError } from "@/modules/clientError";
 import { handleRecursiveError } from "@/modules/clientError/handleRecursiveError";
+import { HttpStatus } from "@/modules/http/statusCodes";
 
 const googleUserCheckOptionsSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -22,6 +23,7 @@ const studentSchema = z.object({
   mail: z.string().email("Invalid email"),
   user_name: z.string(),
   code: z.string(),
+  class_name: z.string(),
   user_identity: z.literal("stu"),
 });
 const alumniSchema = z.object({
@@ -59,19 +61,17 @@ export async function googleUserCheck(
       });
 
       let parsedResponseData: unknown;
-      if (typeof response.data === "string") {
-        if (response.data === "false") {
-          throw new ClientError({
-            errObj: { email },
-            errMsg: "User not found",
-          });
+      if (typeof response.data === "boolean") {
+        if (response.data === false) {
+          throw new ClientError(
+            {
+              errObj: { email },
+              errMsg: "User not found",
+            },
+            HttpStatus.NOT_FOUND,
+          );
         }
-
-        try {
-          parsedResponseData = JSON.parse(response.data);
-        } catch (_error) {
-          throw new Error("Failed to parse response data");
-        }
+        throw new Error("Failed to parse response data");
       } else {
         parsedResponseData = response.data;
       }
@@ -93,9 +93,12 @@ export async function googleUserCheck(
   } catch (error) {
     handleRecursiveError(error);
 
-    throw new ClientError({
-      errMsg: "Failed to check Google user",
-    });
+    throw new ClientError(
+      {
+        errMsg: "Failed to check Google user",
+      },
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 }
 
