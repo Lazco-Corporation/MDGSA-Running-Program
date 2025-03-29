@@ -8,8 +8,15 @@ import { GoogleUserCheckResponse } from "@/modules/mdApi/methods/googleUserCheck
 import { firestoreOperation } from "@/modules/database/firestore";
 import { administrationTeam } from "@/modules/graduateClasses/classes/administrationTeam";
 import { AddLapsRequestSchema, AddLapsResponse } from "./types";
+import {
+  LogResourceId,
+  LogResourceType,
+} from "@/modules/database/firestore/operations/log/addLogEntry";
 
 export async function POST(request: Request) {
+  const requestStartTime = Date.now();
+  let userEmailForLogging: string | undefined;
+
   try {
     const body = await request.json().catch(() => ({}));
 
@@ -25,6 +32,7 @@ export async function POST(request: Request) {
     }
 
     const { email, laps, headcount } = parsedResult.data;
+    userEmailForLogging = email;
 
     const userData = await mdApi.receiveUserData.email({
       email,
@@ -50,10 +58,43 @@ export async function POST(request: Request) {
         },
       });
 
+    await firestoreOperation.log.addLogEntry({
+      resourceType: LogResourceType.BACKEND,
+      resourceId: LogResourceId.USER_ADD_LAPS,
+      logData: {
+        action: "update",
+        userEmail: email,
+        metadata: {
+          processingTimeMs: Date.now() - requestStartTime,
+          headcount,
+          addedLaps: laps * headcount,
+          totalLaps: classData.laps,
+        },
+        status: "success",
+      },
+    });
+
     return NextResponse.json({
       classData,
     } as AddLapsResponse);
   } catch (error) {
+    await firestoreOperation.log.addLogEntry({
+      resourceType: LogResourceType.BACKEND,
+      resourceId: LogResourceId.USER_ADD_LAPS,
+      logData: {
+        action: "error",
+        userEmail: userEmailForLogging,
+        metadata: {
+          processingTimeMs: Date.now() - requestStartTime,
+        },
+        status: "failure",
+        errorDetails: {
+          clientError: error instanceof ClientError ? error : undefined,
+          otherError: error,
+        },
+      },
+    });
+
     if (error instanceof ClientError) {
       return NextResponse.json(error.payload, { status: error.code || 500 });
     }
