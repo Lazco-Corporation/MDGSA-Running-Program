@@ -1,0 +1,43 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+
+import { ClientError } from "@/modules/clientError";
+import { mdApi } from "@/modules/mdApi";
+import { HttpStatus } from "@/modules/http/statusCodes";
+
+const requestBodySchema = z.object({
+  email: z.string().email("Invalid email format"),
+});
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json().catch(() => ({}));
+
+    const result = requestBodySchema.safeParse(body);
+
+    if (!result.success) {
+      throw new ClientError(
+        {
+          errorObject: result.error.flatten().fieldErrors,
+          errorMessage: "Request body does not match expected schema",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const { email } = result.data;
+
+    const userData = await mdApi.receiveUserData.email({ email });
+
+    return NextResponse.json({ userData });
+  } catch (error) {
+    if (error instanceof ClientError) {
+      return NextResponse.json(error.payload, { status: error.code || 500 });
+    }
+
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}
