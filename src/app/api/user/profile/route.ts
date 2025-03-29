@@ -6,20 +6,21 @@ import { mdApi } from "@/modules/mdApi";
 import { HttpStatus } from "@/modules/http/statusCodes";
 import { GoogleUserCheckResponse } from "@/modules/mdApi/methods/googleUserCheck";
 
-const requestBodySchema = z.object({
+const UserProfileRequestSchema = z.object({
   email: z.string().email("Invalid email format"),
 });
-export type UserProfileRequest = z.infer<typeof requestBodySchema>;
+export type UserProfileRequest = z.infer<typeof UserProfileRequestSchema>;
 
-export type UserProfileResponse = {
-  userData: GoogleUserCheckResponse;
-};
+export const UserProfileResponseSchema = z.object({
+  userData: z.custom<GoogleUserCheckResponse>(),
+});
+export type UserProfileResponse = z.infer<typeof UserProfileResponseSchema>;
 
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
 
-    const result = requestBodySchema.safeParse(body);
+    const result = UserProfileRequestSchema.safeParse(body);
 
     if (!result.success) {
       throw new ClientError(
