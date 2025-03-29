@@ -7,11 +7,12 @@ import { HttpStatus } from "@/modules/http/statusCodes";
 import { GoogleUserCheckResponse } from "@/modules/mdApi/methods/googleUserCheck";
 import { firestoreOperation } from "@/modules/database/firestore";
 import { administrationTeam } from "@/modules/graduateClasses/classes/administrationTeam";
-import { AddLapsRequestSchema, AddLapsResponse } from "./types";
 import {
   LogResourceId,
   LogResourceType,
 } from "@/modules/database/firestore/operations/log/addLogEntry";
+import { recordLogEntry } from "@/modules/recordLogEntry";
+import { AddLapsRequestSchema, AddLapsResponse } from "./types";
 
 export async function POST(request: Request) {
   const requestStartTime = Date.now();
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
         },
       });
 
-    await firestoreOperation.log.addLogEntry({
+    recordLogEntry({
       resourceType: LogResourceType.BACKEND,
       resourceId: LogResourceId.USER_ADD_LAPS,
       logData: {
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
       classData,
     } as AddLapsResponse);
   } catch (error) {
-    await firestoreOperation.log.addLogEntry({
+    recordLogEntry({
       resourceType: LogResourceType.BACKEND,
       resourceId: LogResourceId.USER_ADD_LAPS,
       logData: {

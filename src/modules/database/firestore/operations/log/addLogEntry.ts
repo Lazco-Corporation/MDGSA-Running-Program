@@ -1,15 +1,17 @@
 import { firestoreService } from "../../firestoreService";
 import { LogEntry } from "../../types/LogEntry";
 
+export type AddLogEntryOptions = {
+  resourceType: LogResourceType;
+  resourceId: LogResourceId;
+  logData: Omit<LogEntry, "id" | "timestamp">;
+};
+
 export async function addLogEntry({
   resourceType,
   resourceId,
   logData,
-}: {
-  resourceType: LogResourceType;
-  resourceId: LogResourceId;
-  logData: Omit<LogEntry, "id" | "timestamp">;
-}): Promise<string | null> {
+}: AddLogEntryOptions): Promise<string | null> {
   try {
     const timestamp = Date.now();
 
