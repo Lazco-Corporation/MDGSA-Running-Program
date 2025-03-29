@@ -40,21 +40,21 @@ const googleUserResponseSchema = z.discriminatedUnion("user_identity", [
 ]);
 export type GoogleUserCheckResponse =
   | {
-      mail: string;
+      email: string;
       userName: string;
       code: string;
       className: string | null;
       userIdentity: "teach";
     }
   | {
-      mail: string;
+      email: string;
       userName: string;
       code: string;
       className: string;
       userIdentity: "stu";
     }
   | {
-      mail: string;
+      email: string;
       userName: string;
       userJob: string;
       userIdentity: "alu";
@@ -114,7 +114,7 @@ function mapUserResponseToClientFormat(
   parsedData: z.infer<typeof googleUserResponseSchema>,
 ): GoogleUserCheckResponse {
   const baseData = {
-    mail: parsedData.mail,
+    email: parsedData.mail,
     userName: parsedData.user_name,
   };
 
