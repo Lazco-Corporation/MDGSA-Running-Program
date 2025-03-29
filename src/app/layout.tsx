@@ -25,7 +25,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "為畢業而跑，為夢想而跑！",
+  title: "為夢想而跑",
   description:
     "與畢業生和師長們一同累積里程、挑戰排行榜、超越極限！每一步都帶你更接近夢想，每一公里都讓畢業更有意義！",
   icons: {
