@@ -11,17 +11,12 @@ import styles from "@/styles/Home/Home.module.css";
 import type { ListAllClassesResponse } from "@/app/api/class/list-all/types";
 
 export default function HomePage() {
-  const [listAllClasses, setListAllClasses] =
-    useState<ListAllClassesResponse>();
+  const [listAllClasses, setListAllClasses] = useState<ListAllClassesResponse>();
   const [totalLaps, setTotalLaps] = useState<number>(0);
 
   useEffect(() => {
-    fetch("/api/class/list-all")
-      .then((res) => res.json())
-      .then((data) => setListAllClasses(data));
-    fetch("/api/class/total-laps")
-      .then((res) => res.json())
-      .then((data) => setTotalLaps(data.totalLaps));
+    fetch("/api/class/list-all").then((res) => res.json()).then((data) => setListAllClasses(data));
+    fetch("/api/class/total-laps").then((res) => res.json()).then((data) => setTotalLaps(data.totalLaps));
   }, []);
 
   return (
