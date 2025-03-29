@@ -12,7 +12,7 @@ export default function Header() {
                 <div className={styles.logoContainer}>
                     <Link href="/">
                         <Image
-                            src="/images/logo-temp.png"
+                            src="/images/logo.png"
                             alt="明道中學「為夢想而跑」活動Logo"
                             width={180}
                             height={45}
