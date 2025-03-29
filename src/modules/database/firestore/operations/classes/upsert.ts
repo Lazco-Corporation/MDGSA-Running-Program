@@ -1,5 +1,6 @@
 import { ClientError } from "@/modules/clientError";
 import { HttpStatus } from "@/modules/http/statusCodes";
+import { graduateClasses } from "@/modules/graduateClasses";
 import { firestoreService } from "../../firestoreService";
 import { Class, ClassSchema } from "../../types/Class";
 
@@ -18,6 +19,19 @@ export async function upsertByGraduateYearAndGlobalCode({
   >;
 }): Promise<Class> {
   try {
+    const validGraduateYears = Object.keys(graduateClasses);
+    const validGraduateClassesGlobalCodes = graduateClasses[
+      graduateYear as keyof typeof graduateClasses
+    ].all.map((classInfo) => classInfo.globalCode);
+
+    if (!validGraduateYears.includes(graduateYear.toString())) {
+      throw new Error("Invalid graduate year");
+    }
+
+    if (!validGraduateClassesGlobalCodes.includes(globalCode)) {
+      throw new Error("Invalid global code");
+    }
+
     const querySnapshot = await firestoreService
       .collection("classes")
       .where("graduateYear", "==", graduateYear)
