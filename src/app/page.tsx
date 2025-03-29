@@ -1,6 +1,8 @@
 "use client";
+
 import { useState, useEffect, useCallback } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+
 import type { UserProfileResponse } from "@/app/api/user/profile/route";
 
 export default function Home() {
@@ -101,8 +103,8 @@ export default function Home() {
               <div className="bg-gray-50 p-3 rounded">
                 {profileData.userData && (
                   <div className="space-y-2">
-                    {Object.entries(profileData.userData)
-                      .map(([key, value]) => (
+                    {Object.entries(profileData.userData).map(
+                      ([key, value]) => (
                         <p key={key}>
                           <span className="font-medium">
                             {key.charAt(0).toUpperCase() + key.slice(1)}:
@@ -111,7 +113,8 @@ export default function Home() {
                             ? JSON.stringify(value)
                             : String(value)}
                         </p>
-                      ))}
+                      ),
+                    )}
                   </div>
                 )}
               </div>
