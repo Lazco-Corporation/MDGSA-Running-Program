@@ -27,17 +27,20 @@ export async function GET() {
   try {
     const allClasses = await firestoreOperation.classes.listAll();
 
-    const formattedAllClasses = allClasses.map((classInfo) => ({
-      name:
-        graduateClasses[2025].all.find(
-          (fullClassInfo) => fullClassInfo.globalCode === classInfo.globalCode,
-        )?.name || "",
-      graduateYear: classInfo.graduateYear,
-      globalCode: classInfo.globalCode,
-      laps: classInfo.laps,
-      createdAt: classInfo.createdAt,
-      updatedAt: classInfo.updatedAt,
-    }));
+    const formattedAllClasses = allClasses
+      .map((classInfo) => ({
+        name:
+          graduateClasses[2025].all.find(
+            (fullClassInfo) =>
+              fullClassInfo.globalCode === classInfo.globalCode,
+          )?.name || "",
+        graduateYear: classInfo.graduateYear,
+        globalCode: classInfo.globalCode,
+        laps: classInfo.laps,
+        createdAt: classInfo.createdAt,
+        updatedAt: classInfo.updatedAt,
+      }))
+      .sort((a, b) => b.laps - a.laps);
 
     return NextResponse.json({
       allClasses: formattedAllClasses,
