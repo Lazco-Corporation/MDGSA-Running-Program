@@ -1,9 +1,24 @@
-// pages/index.js
+"use client";
+
+// Module
 import Link from 'next/link';
-import Image from 'next/image';
+import { useState, useEffect } from 'react';
+
+// Style
 import styles from '@/styles/Home/Home.module.css';
 
+// Type
+import type { ListAllClassesResponse } from "@/app/api/class/list-all/route"
+
 export default function HomePage() {
+
+    const [listAllClasses, setListAllClasses] = useState<ListAllClassesResponse>();
+    const [totalKM, setTotalKM] = useState<number>(0);
+
+    useEffect(() => {
+        fetch("/api/class/list-all").then(res => res.json()).then(data => setListAllClasses(data));
+    }, [])
+
     return (
         <div>
             <div className={styles.progressWrapper}>
@@ -25,7 +40,7 @@ export default function HomePage() {
                             </div>
                             <div className={styles.progressStat}>
                                 <h3>畢業班數量</h3>
-                                <p>53 班</p>
+                                <p>56 班</p>
                             </div>
                         </div>
 
@@ -54,59 +69,16 @@ export default function HomePage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td className={`${styles.rank} ${styles.rank1}`}>1</td>
-                                    <td className={styles.className}>高二3班</td>
-                                    <td className={styles.distance}>2,145 公里</td>
-                                    <td>53.6 公里</td>
-                                </tr>
-                                <tr>
-                                    <td className={`${styles.rank} ${styles.rank2}`}>2</td>
-                                    <td className={styles.className}>高一5班</td>
-                                    <td className={styles.distance}>1,963 公里</td>
-                                    <td>49.1 公里</td>
-                                </tr>
-                                <tr>
-                                    <td className={`${styles.rank} ${styles.rank3}`}>3</td>
-                                    <td className={styles.className}>高三1班</td>
-                                    <td className={styles.distance}>1,879 公里</td>
-                                    <td>47.0 公里</td>
-                                </tr>
-                                <tr>
-                                    <td className={styles.rank}>4</td>
-                                    <td className={styles.className}>高一2班</td>
-                                    <td className={styles.distance}>1,752 公里</td>
-                                    <td>43.8 公里</td>
-                                </tr>
-                                <tr>
-                                    <td className={styles.rank}>5</td>
-                                    <td className={styles.className}>高二8班</td>
-                                    <td className={styles.distance}>1,645 公里</td>
-                                    <td>41.1 公里</td>
-                                </tr>
-                                <tr>
-                                    <td className={styles.rank}>6</td>
-                                    <td className={styles.className}>高三4班</td>
-                                    <td className={styles.distance}>1,589 公里</td>
-                                    <td>39.7 公里</td>
-                                </tr>
-                                <tr>
-                                    <td className={styles.rank}>7</td>
-                                    <td className={styles.className}>高二1班</td>
-                                    <td className={styles.distance}>1,487 公里</td>
-                                    <td>37.2 公里</td>
-                                </tr>
+                                {listAllClasses?.allClasses.map((classItem, index) => (
+                                    <tr key={index}>
+                                        <td className={`${styles.rank} ${styles[`rank${index + 1}`]}`}>{index + 1}</td>
+                                        <td className={styles.className}>{classItem.name}</td>
+                                        <td className={styles.distance}>{(classItem.laps * 0.4).toLocaleString('zh-TW')} 公里</td>
+                                        <td>{((classItem.laps * 0.4) / 40).toFixed(1)} 公里</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
-                        {/* 
-                        <div className={styles.viewMoreContainer}>
-                            <Link href="/ranking" className={styles.viewMoreLink}>
-                                查看完整排名
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M5 12h14M12 5l7 7-7 7" />
-                                </svg>
-                            </Link>
-                        </div> */}
                     </section>
                 </div>
             </div>
