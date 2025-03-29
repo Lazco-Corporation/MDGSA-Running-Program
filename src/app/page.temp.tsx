@@ -3,14 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
-import type { UserProfileResponse } from "@/app/api/user/profile/route";
+import type { ProfileResponse } from "@/app/api/user/profile/types";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(true);
-  const [profileData, setProfileData] = useState<UserProfileResponse | null>(
-    null,
-  );
+  const [profileData, setProfileData] = useState<ProfileResponse | null>(null);
   const [profileError, setProfileError] = useState<string | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 

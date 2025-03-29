@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { ClientError } from "@/modules/clientError";
 import { firestoreOperation } from "@/modules/database/firestore";
 import { HttpStatus } from "@/modules/http/statusCodes";
+import { TotalLapsResponse } from "./types";
 
 export async function GET() {
   try {
@@ -14,7 +15,7 @@ export async function GET() {
 
     return NextResponse.json({
       totalLaps: totalLaps,
-    });
+    } as TotalLapsResponse);
   } catch (error) {
     if (error instanceof ClientError) {
       return NextResponse.json(error.payload, { status: error.code || 500 });
