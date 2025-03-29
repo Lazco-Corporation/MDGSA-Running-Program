@@ -4,10 +4,16 @@ import { z } from "zod";
 import { ClientError } from "@/modules/clientError";
 import { mdApi } from "@/modules/mdApi";
 import { HttpStatus } from "@/modules/http/statusCodes";
+import { GoogleUserCheckResponse } from "@/modules/mdApi/methods/googleUserCheck";
 
 const requestBodySchema = z.object({
   email: z.string().email("Invalid email format"),
 });
+export type UserProfileRequest = z.infer<typeof requestBodySchema>;
+
+export type UserProfileResponse = {
+  userData: GoogleUserCheckResponse;
+};
 
 export async function POST(request: Request) {
   try {
