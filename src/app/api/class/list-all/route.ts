@@ -13,7 +13,11 @@ export async function GET() {
     const formattedAllClasses = allClasses
       .map((classInfo) => ({
         name:
-          graduateClasses[2025].all.find(
+          graduateClasses[
+            Number(
+              process.env.CURRENT_GRADUATE_YEAR,
+            ) as keyof typeof graduateClasses
+          ].all.find(
             (fullClassInfo) =>
               fullClassInfo.globalCode === classInfo.globalCode,
           )?.name || "",
