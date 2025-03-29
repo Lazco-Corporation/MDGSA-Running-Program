@@ -11,17 +11,12 @@ import styles from "@/styles/Home/Home.module.css";
 import type { ListAllClassesResponse } from "@/app/api/class/list-all/types";
 
 export default function HomePage() {
-  const [listAllClasses, setListAllClasses] =
-    useState<ListAllClassesResponse>();
+  const [listAllClasses, setListAllClasses] = useState<ListAllClassesResponse>();
   const [totalLaps, setTotalLaps] = useState<number>(0);
 
   useEffect(() => {
-    fetch("/api/class/list-all")
-      .then((res) => res.json())
-      .then((data) => setListAllClasses(data));
-    fetch("/api/class/total-laps")
-      .then((res) => res.json())
-      .then((data) => setTotalLaps(data.totalLaps));
+    fetch("/api/class/list-all").then((res) => res.json()).then((data) => setListAllClasses(data));
+    fetch("/api/class/total-laps").then((res) => res.json()).then((data) => setTotalLaps(data.totalLaps));
   }, []);
 
   return (
@@ -34,7 +29,7 @@ export default function HomePage() {
               <div className={styles.progressStat}>
                 <h3>累計總里程</h3>
                 <p>
-                  {Math.floor(totalLaps * 0.4).toLocaleString("zh-TW")} 公里
+                  {(totalLaps * 0.4).toLocaleString("zh-TW")} 公里
                 </p>
               </div>
               <div className={styles.progressStat}>
@@ -89,10 +84,10 @@ export default function HomePage() {
                     </td>
                     <td className={styles.className}>{classItem.name}</td>
                     <td className={styles.distance}>
-                      {Math.floor(classItem.laps * 0.4).toLocaleString("zh-TW")}{" "}
+                      {(classItem.laps * 0.4).toLocaleString("zh-TW")}{" "}
                       公里
                     </td>
-                    <td>{((classItem.laps * 0.4) / 45).toFixed(0)} 公里</td>
+                    <td>{((classItem.laps * 0.4) / 45).toFixed(2)} 公里</td>
                   </tr>
                 ))}
               </tbody>
