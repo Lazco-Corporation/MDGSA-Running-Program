@@ -1,9 +1,10 @@
-import axios, { AxiosError } from "axios";
-import { z, ZodError } from "zod";
+import axios from "axios";
+import { z } from "zod";
 
 import { ClientError } from "@/modules/clientError";
 import { handleRecursiveError } from "@/modules/clientError/handleRecursiveError";
 import { HttpStatus } from "@/modules/http/statusCodes";
+import { isAxiosError } from "@/modules/checkError/isAxiosError";
 
 const googleUserCheckOptionsSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -63,84 +64,42 @@ export async function googleUserCheck(
   options: GoogleUserCheckOptions,
 ): Promise<GoogleUserCheckResponse> {
   try {
-    try {
-      googleUserCheckOptionsSchema.parse(options);
-    } catch (error) {
-      if (isZodError(error)) {
-        throw new Error("Invalid options: Email format is incorrect");
-      }
-      throw error;
+    const optionsResult = googleUserCheckOptionsSchema.safeParse(options);
+    if (!optionsResult.success) {
+      throw new Error("Invalid options: Email format is incorrect");
     }
-    const { email } = options;
 
-    try {
-      const API_URL =
-        "https://mdsrl.mingdao.edu.tw/mdpp/Sig20Login/googleUserCheck";
-      const response = await axios.postForm(API_URL, {
-        email,
-      });
+    const { email } = optionsResult.data;
+    const API_URL =
+      "https://mdsrl.mingdao.edu.tw/mdpp/Sig20Login/googleUserCheck";
 
-      let parsedResponseData: unknown;
-      if (typeof response.data === "boolean") {
-        if (response.data === false) {
-          throw new ClientError(
-            {
-              errorObject: { email },
-              errorMessage: "User not found",
-            },
-            HttpStatus.NOT_FOUND,
-          );
-        }
-        throw new Error("Failed to parse response data");
-      } else {
-        parsedResponseData = response.data;
+    const response = await axios.postForm(API_URL, { email });
+
+    if (typeof response.data === "boolean") {
+      if (response.data === false) {
+        throw new ClientError(
+          {
+            errorObject: { email },
+            errorMessage: "User not found",
+          },
+          HttpStatus.NOT_FOUND,
+        );
       }
-
-      try {
-        const parsedData = googleUserResponseSchema.parse(parsedResponseData);
-
-        switch (parsedData.user_identity) {
-          case "teach": {
-            return {
-              mail: parsedData.mail,
-              userName: parsedData.user_name,
-              code: parsedData.code,
-              className: parsedData.class_name,
-              userIdentity: "teach",
-            };
-          }
-          case "stu": {
-            return {
-              mail: parsedData.mail,
-              userName: parsedData.user_name,
-              code: parsedData.code,
-              className: parsedData.class_name,
-              userIdentity: "stu",
-            };
-          }
-          case "alu": {
-            return {
-              mail: parsedData.mail,
-              userName: parsedData.user_name,
-              userJob: parsedData.user_job,
-              userIdentity: "alu",
-            };
-          }
-        }
-      } catch (error) {
-        if (isZodError(error)) {
-          throw new Error("Response data does not match expected schema");
-        }
-        throw error;
-      }
-    } catch (error) {
-      if (isAxiosError(error)) {
-        throw new Error(`API request failed: ${error.message}`);
-      }
-      throw error;
+      throw new Error("Failed to parse response data");
     }
+
+    const responseResult = googleUserResponseSchema.safeParse(response.data);
+    if (!responseResult.success) {
+      throw new Error("Response data does not match expected schema");
+    }
+
+    return mapUserResponseToClientFormat(responseResult.data);
   } catch (error) {
-    handleRecursiveError(error);
+    if (isAxiosError(error)) {
+      handleRecursiveError(new Error(`API request failed: ${error.message}`));
+    } else {
+      handleRecursiveError(error);
+    }
 
     throw new ClientError(
       {
@@ -151,10 +110,34 @@ export async function googleUserCheck(
   }
 }
 
-export function isZodError(error: unknown): error is ZodError {
-  return error instanceof z.ZodError;
-}
+function mapUserResponseToClientFormat(
+  parsedData: z.infer<typeof googleUserResponseSchema>,
+): GoogleUserCheckResponse {
+  const baseData = {
+    mail: parsedData.mail,
+    userName: parsedData.user_name,
+  };
 
-export function isAxiosError(error: unknown): error is AxiosError {
-  return axios.isAxiosError(error);
+  switch (parsedData.user_identity) {
+    case "teach":
+      return {
+        ...baseData,
+        code: parsedData.code,
+        className: parsedData.class_name,
+        userIdentity: "teach",
+      };
+    case "stu":
+      return {
+        ...baseData,
+        code: parsedData.code,
+        className: parsedData.class_name,
+        userIdentity: "stu",
+      };
+    case "alu":
+      return {
+        ...baseData,
+        userJob: parsedData.user_job,
+        userIdentity: "alu",
+      };
+  }
 }
