@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
     const userData = await mdApi.receiveUserData.email({ email });
 
-    return NextResponse.json({ userData });
+    return NextResponse.json({ userData } as UserProfileResponse);
   } catch (error) {
     if (error instanceof ClientError) {
       return NextResponse.json(error.payload, { status: error.code || 500 });
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR },
     );
   }
 }
