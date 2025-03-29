@@ -16,6 +16,6 @@ export type ClassInfo = {
   code: string;
   name: string;
   value: string;
-  suffix: string;
+  globalCode: string;
   displayText: string;
 };
