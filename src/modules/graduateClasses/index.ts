@@ -17,5 +17,4 @@ export type ClassInfo = {
   name: string;
   value: string;
   globalCode: string;
-  displayText: string;
 };

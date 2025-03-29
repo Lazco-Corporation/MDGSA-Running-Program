@@ -1,3 +1,4 @@
+import { administrationTeam } from "../administrationTeam";
 import { internationalClasses } from "./internationalClasses";
 import { juniorHighClasses } from "./juniorHighClasses";
 import { seniorHighClasses } from "./seniorHighClasses";
@@ -9,6 +10,7 @@ export const graduateClasses2025 = {
     ...seniorHighClasses,
     ...technicalHighClasses,
     ...internationalClasses,
+    administrationTeam,
   ],
   juniorHighClasses,
   seniorHighClasses,
