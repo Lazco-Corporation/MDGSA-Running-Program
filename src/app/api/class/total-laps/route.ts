@@ -7,7 +7,7 @@ import { TotalLapsResponse } from "./types";
 
 export async function GET() {
   try {
-    const allClasses = await firestoreOperation.classes.listAll();
+    const allClasses = await firestoreOperation.class.listAll();
 
     const totalLaps = allClasses.reduce((total, classInfo) => {
       return total + classInfo.laps;

@@ -9,19 +9,18 @@ export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
 
-    const result = ProfileRequestSchema.safeParse(body);
-
-    if (!result.success) {
+    const parsedResult = ProfileRequestSchema.safeParse(body);
+    if (!parsedResult.success) {
       throw new ClientError(
         {
-          errorObject: result.error.flatten().fieldErrors,
+          errorObject: parsedResult.error.flatten().fieldErrors,
           errorMessage: "Request body does not match expected schema",
         },
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const { email } = result.data;
+    const { email } = parsedResult.data;
 
     const userData = await mdApi.receiveUserData.email({ email });
 

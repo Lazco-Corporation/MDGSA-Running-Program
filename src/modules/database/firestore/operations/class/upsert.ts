@@ -9,8 +9,8 @@ export async function upsertByGraduateYearAndGlobalCode({
   globalCode,
   classData,
 }: {
-  graduateYear: number;
-  globalCode: string;
+  graduateYear: Class["graduateYear"];
+  globalCode: Class["globalCode"];
   classData: Partial<
     Omit<
       Class,
