@@ -52,8 +52,13 @@ export async function GET() {
       );
     }
   } catch (error) {
-    return NextResponse.json((error as ClientError).payload, {
-      status: (error as ClientError).code || 500,
-    });
+    if (error instanceof ClientError) {
+      return NextResponse.json(error.payload, { status: error.code || 500 });
+    }
+
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }
