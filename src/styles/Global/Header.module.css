@@ -1,0 +1,80 @@
+/* styles/Global/Header.module.css */
+
+.header {
+    background-color: white;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logoContainer {
+    display: flex;
+    align-items: center;
+}
+
+.logoContainer a {
+    display: flex;
+    align-items: center;
+}
+
+.loginButton {
+    background-color: #ff6bb3;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 5px rgba(255, 107, 179, 0.3);
+}
+
+.loginButton:hover {
+    background-color: #e04f97;
+}
+
+/* 響應式設計 */
+@media (max-width: 900px) {
+    .container {
+        flex-wrap: wrap;
+    }
+
+    .logoContainer {
+        margin-right: auto;
+    }
+
+    .navLinks {
+        order: 3;
+        width: 100%;
+        margin-top: 1rem;
+        justify-content: center;
+    }
+
+    .navLink {
+        margin: 0 0.8rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .navLinks {
+        flex-wrap: wrap;
+    }
+
+    .navLink {
+        margin: 0.3rem 0.6rem;
+    }
+
+    .actionButton {
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,370 @@
+/* styles/Home/Home.module.css */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 3rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.heroContent {
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    color: #1a3a8f;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto 1.5rem;
+}
+
+.heroButton {
+    display: inline-block;
+    background-color: #ff6bb3;
+    color: white;
+    padding: 0.8rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 107, 179, 0.3);
+}
+
+.heroButton:hover {
+    background-color: #e04f97;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 107, 179, 0.4);
+}
+
+.heroImage {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+/* Progress Section */
+.progressWrapper {
+    background-color: #f8f9ff;
+    padding: 3rem 0;
+    padding-bottom: 0rem;
+}
+
+.progressSection {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.progressTitle {
+    font-size: 1.8rem;
+    color: #1a3a8f;
+    margin-bottom: 1.5rem;
+}
+
+.progressInfo {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.progressStat {
+    padding: 1rem;
+}
+
+.progressStat h3 {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.progressStat p {
+    font-size: 2rem;
+    color: #1a3a8f;
+    font-weight: bold;
+}
+
+.destination {
+    color: #ff6bb3;
+}
+
+.progressBarContainer {
+    width: 100%;
+    height: 30px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.progressBar {
+    height: 100%;
+    background: linear-gradient(90deg, #1a3a8f 0%, #ff6bb3 100%);
+    border-radius: 15px;
+    width: 65%;
+    /* 假設目前進度 */
+    transition: width 1.5s ease-in-out;
+}
+
+.progressMessage {
+    font-size: 1.2rem;
+    color: #1a3a8f;
+}
+
+.joinButton {
+    display: inline-block;
+    background-color: #ff6bb3;
+    color: white;
+    padding: 0.7rem 1.2rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 2rem;
+    transition: background-color 0.3s;
+    font-size: 1.2rem;
+}
+
+.joinButton:hover {
+    background-color: #e04f97;
+}
+
+/* Ranking Section */
+.rankingWrapper {
+    background-color: #f8f9ff;
+    padding: 3rem 0;
+
+}
+
+.rankingSection {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.rankingTitle {
+    font-size: 1.8rem;
+    color: #1a3a8f;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.rankingTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rankingTable th,
+.rankingTable td {
+    padding: 1rem;
+    text-align: center;
+}
+
+.rankingTable th {
+    background-color: #1a3a8f;
+    color: white;
+}
+
+.rankingTable tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.rankingTable tr:hover {
+    background-color: #f0f0f0;
+}
+
+.rank {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.rank1 {
+    color: gold;
+}
+
+.rank2 {
+    color: silver;
+}
+
+.rank3 {
+    color: #cd7f32;
+    /* bronze */
+}
+
+.className {
+    font-weight: bold;
+    color: #1a3a8f;
+}
+
+.distance {
+    font-weight: bold;
+    color: #ff6bb3;
+}
+
+.viewMoreContainer {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.viewMoreLink {
+    color: #1a3a8f;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.viewMoreLink:hover {
+    color: #ff6bb3;
+}
+
+.viewMoreLink svg {
+    margin-left: 0.5rem;
+    transition: transform 0.3s;
+}
+
+.viewMoreLink:hover svg {
+    transform: translateX(5px);
+}
+
+/* Features Section */
+.featuresWrapper {
+    background-color: white;
+    padding: 3rem 0;
+}
+
+.featuresSection {
+    text-align: center;
+}
+
+.sectionTitle {
+    font-size: 1.8rem;
+    color: #1a3a8f;
+    margin-bottom: 2.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.sectionTitle::after {
+    content: '';
+    position: absolute;
+    bottom: -0.8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #ff6bb3;
+}
+
+.featuresGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.featureCard {
+    background-color: #f8f9ff;
+    border-radius: 10px;
+    padding: 2rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.featureCard:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.featureIcon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.featureTitle {
+    font-size: 1.3rem;
+    color: #1a3a8f;
+    margin-bottom: 1rem;
+}
+
+.featureDescription {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 響應式設計 */
+@media (min-width: 768px) {
+    .hero {
+        flex-direction: row;
+        text-align: left;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .heroContent {
+        margin-right: 2rem;
+        margin-bottom: 0;
+    }
+
+    .hero p {
+        margin: 0 0 1.5rem;
+    }
+
+    .heroImage {
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .progressInfo {
+        flex-direction: column;
+    }
+
+    .progressStat {
+        margin-bottom: 1rem;
+    }
+
+    .rankingTable th,
+    .rankingTable td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .featuresGrid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .progressSection,
+    .rankingSection {
+        padding: 1.5rem;
+    }
+}
