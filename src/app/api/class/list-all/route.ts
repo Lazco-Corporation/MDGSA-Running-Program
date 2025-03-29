@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { NextResponse } from "next/server";
 
 import { ClientError } from "@/modules/clientError";
@@ -6,9 +7,21 @@ import { Class } from "@/modules/database/firestore/types/Class";
 import { firestoreOperation } from "@/modules/database/firestore";
 import { ClassInfo, graduateClasses } from "@/modules/graduateClasses";
 
-export type ListAllClassesResponse = {
-  allClasses: { name: ClassInfo["name"]; laps: Class["laps"] }[];
-};
+export const ListAllClassesResponseSchema = z.object({
+  allClasses: z.array(
+    z.object({
+      name: z.custom<ClassInfo["name"]>(),
+      graduateYear: z.custom<Class["graduateYear"]>(),
+      globalCode: z.custom<Class["globalCode"]>(),
+      laps: z.custom<Class["laps"]>(),
+      createdAt: z.custom<Class["createdAt"]>(),
+      updatedAt: z.custom<Class["updatedAt"]>(),
+    }),
+  ),
+});
+export type ListAllClassesResponse = z.infer<
+  typeof ListAllClassesResponseSchema
+>;
 
 export async function GET() {
   try {
@@ -19,7 +32,11 @@ export async function GET() {
         graduateClasses[2025].all.find(
           (fullClassInfo) => fullClassInfo.globalCode === classInfo.globalCode,
         )?.name || "",
+      graduateYear: classInfo.graduateYear,
+      globalCode: classInfo.globalCode,
       laps: classInfo.laps,
+      createdAt: classInfo.createdAt,
+      updatedAt: classInfo.updatedAt,
     }));
 
     return NextResponse.json({
