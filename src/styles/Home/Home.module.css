@@ -170,18 +170,45 @@
 
 .rankingTable {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
-.rankingTable th,
-.rankingTable td {
-    padding: 1rem;
-    text-align: center;
+.rankingTable thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+.rankingTable tbody {
+    display: block;
+    max-height: 20rem;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.rankingTable tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
 .rankingTable th {
     background-color: #1a3a8f;
     color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+.rankingTable td {
+    padding: 1rem;
+    text-align: center;
 }
 
 .rankingTable tr:nth-child(odd) {

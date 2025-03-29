@@ -7,6 +7,7 @@ import { Providers } from "./provider";
 
 // Style
 import "@/styles/Global/globals.css";
+import "@/styles/Global/scroll.css";
 import styles from '@/styles/Global/Layout.module.css';
 
 // Component

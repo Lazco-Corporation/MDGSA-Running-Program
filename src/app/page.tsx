@@ -13,10 +13,11 @@ import type { ListAllClassesResponse } from "@/app/api/class/list-all/route"
 export default function HomePage() {
 
     const [listAllClasses, setListAllClasses] = useState<ListAllClassesResponse>();
-    const [totalKM, setTotalKM] = useState<number>(0);
+    const [totalLaps, setTotalLaps] = useState<number>(0);
 
     useEffect(() => {
         fetch("/api/class/list-all").then(res => res.json()).then(data => setListAllClasses(data));
+        fetch("/api/class/total-laps").then(res => res.json()).then(data => setTotalLaps(data.totalLaps));
     }, [])
 
     return (
@@ -28,7 +29,7 @@ export default function HomePage() {
                         <div className={styles.progressInfo}>
                             <div className={styles.progressStat}>
                                 <h3>累計總里程</h3>
-                                <p>24,901 公里</p>
+                                <p>{Math.floor(totalLaps * 0.4).toLocaleString('zh-TW')} 公里</p>
                             </div>
                             <div className={styles.progressStat}>
                                 <h3>目前位置</h3>
@@ -68,13 +69,13 @@ export default function HomePage() {
                                     <th>平均每人</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className={styles.scrollBody}>
                                 {listAllClasses?.allClasses.map((classItem, index) => (
                                     <tr key={index}>
-                                        <td className={`${styles.rank} ${styles[`rank${index + 1}`]}`}>{index + 1}</td>
+                                        <td className={`${styles.rank} ${index < 3 ? styles[`rank${index + 1}`] : ""}`}>{index + 1}</td>
                                         <td className={styles.className}>{classItem.name}</td>
-                                        <td className={styles.distance}>{(classItem.laps * 0.4).toLocaleString('zh-TW')} 公里</td>
-                                        <td>{((classItem.laps * 0.4) / 40).toFixed(1)} 公里</td>
+                                        <td className={styles.distance}>{Math.floor(classItem.laps * 0.4).toLocaleString('zh-TW')} 公里</td>
+                                        <td>{((classItem.laps * 0.4) / 45).toFixed(0)} 公里</td>
                                     </tr>
                                 ))}
                             </tbody>

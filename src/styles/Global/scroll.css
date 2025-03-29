@@ -1,0 +1,32 @@
+/* 全域滾動條樣式 - 可添加到全域CSS檔案中 */
+
+/* Webkit瀏覽器 (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #a0b4e0;
+    border-radius: 10px;
+    transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1a3a8f;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Firefox瀏覽器 */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #a0b4e0 #f1f1f1;
+}
