@@ -3,6 +3,8 @@
 // Module
 import { useState, useEffect, useCallback } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 // Style
 import styles from '@/styles/Record/Record.module.css';
@@ -11,8 +13,10 @@ import styles from '@/styles/Record/Record.module.css';
 import type { ExtendedNextAuthSession } from "@/app/api/auth/[...nextauth]/types";
 
 export default function RecordPage() {
-    // 使用泛型來指定 session 的類型
+    const router = useRouter();
     const { data: session, status } = useSession();
+    const [userData, setUserData] = useState<ExtendedNextAuthSession | undefined | null>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [formData, setFormData] = useState({
         laps: 1,
@@ -29,10 +33,8 @@ export default function RecordPage() {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        // 這裡可以添加表單驗證和提交邏輯
         alert('跑步記錄提交成功！');
 
-        // 重置表單
         setFormData({
             laps: 1,
             people: 1
@@ -48,9 +50,66 @@ export default function RecordPage() {
     }, []);
 
     useEffect(() => {
+        setUserData(session as ExtendedNextAuthSession);
+
         console.log("Session status:", status);
         console.log("Session data:", session);
     }, [status, session]);
+
+    useEffect(() => {
+        if (userData?.belongsToMingdao === false) {
+            Swal.fire({
+                title: "登入失敗",
+                text: "您必須使用明道中學所配發的帳號才能登入!",
+                icon: "error",
+                confirmButtonText: "好的",
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                customClass: {
+                    container: "select-none",
+                },
+                focusConfirm: false,
+                background: "#fff url(/images/trees.png)",
+                backdrop: `
+                  rgba(0,0,123,0.4)
+                  url("/images/nyan-cat.gif")
+                  left top
+                  no-repeat
+                `,
+                preConfirm: () => {
+                    signOut({ callbackUrl: "/" });
+                }
+            });
+        }
+        if (userData?.isGraduateClass === false) {
+
+            Swal.fire({
+                title: "登入失敗",
+                text: "您必須是應屆畢業生或學校老師才能登入!",
+                icon: "error",
+                confirmButtonText: "好的",
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                customClass: {
+                    container: "select-none",
+                },
+                focusConfirm: false,
+                background: "#fff url(/images/trees.png)",
+                backdrop: `
+                  rgba(0,0,123,0.4)
+                  url("/images/nyan-cat.gif")
+                  left top
+                  no-repeat
+                `,
+                preConfirm: () => {
+                    signOut({ callbackUrl: "/" });
+                }
+            });
+        }
+        if (userData?.belongsToMingdao === true && userData?.isGraduateClass === true) {
+            setIsLoading(false);
+        }
+    }, [userData])
 
     return (
         <div className={styles.container}>
@@ -61,31 +120,28 @@ export default function RecordPage() {
                 <div className={styles.formContainer}>
                     {status === "loading" ? (
                         <div className={styles.loading}>載入中...</div>
-                    ) : ((status === "authenticated") ? (
-                        /* 已登入用戶顯示表單 */
+                    ) : ((!isLoading && status === "authenticated" && userData) ? (
                         <>
                             <div className={styles.userInfo}>
                                 {session.user?.image && (
                                     <img
-                                        src={session.user.image}
+                                        src={userData.user?.image!}
                                         alt="用戶頭像"
                                         className={styles.userAvatar}
                                     />
                                 )}
                                 <div className={styles.userDetails}>
                                     <p className={styles.welcomeMessage}>
-                                        歡迎, {session.user?.name || "用戶"}
+                                        {userData.userAttributes?.userName + " " + (userData.userAttributes?.userIdentity === "stu" ? "同學" : "老師")}
                                     </p>
-                                    <p className={styles.userEmail}>{session.user?.email?.split("@")[0].toUpperCase()}@{session.user?.email?.split("@")[1]}</p>
-                                    {/* {isLoadingProfile ? (
-                                        <p className={styles.loadingText}>載入用戶資料中...</p>
-                                    ) : profileError ? (
-                                        <p className={styles.errorText}>{profileError}</p>
-                                    ) : profileData && (
-                                        <p className={styles.userClass}>
-                                            班級: 未設定
-                                        </p>
-                                    )} */}
+                                    <p className={styles.userEmail}>
+                                        {(userData.userAttributes?.email)}
+
+                                    </p>
+                                    <p className={styles.userClass}>
+                                        {(userData.isGraduateClass && userData.userAttributes?.userIdentity === "teach") && userData.userAttributes?.className}
+                                        {(userData.userAttributes?.userIdentity === "stu" && userData.userAttributes?.className)}
+                                    </p>
                                 </div>
                                 <button
                                     onClick={handleLogout}
@@ -96,34 +152,38 @@ export default function RecordPage() {
                             </div>
 
                             <form id="runningForm" onSubmit={handleSubmit} className={styles.runningForm}>
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="laps">跑步圈數</label>
-                                    <input
-                                        type="number"
-                                        id="laps"
-                                        name="laps"
-                                        placeholder="2"
-                                        min={1}
-                                        value={formData.laps}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
+                                <div className={styles.formWrapper}>
+                                    <div className={styles.formGroup}>
+                                        <label htmlFor="laps" className={styles.formLabel}>跑步圈數</label>
+                                        <input
+                                            type="number"
+                                            id="laps"
+                                            name="laps"
+                                            placeholder="2"
+                                            min={1}
+                                            max={10}
+                                            value={formData.laps}
+                                            onChange={handleChange}
+                                            required
+                                            className={styles.formInput}
+                                        />
+                                    </div>
 
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="duration">跑步人數</label>
-                                    <input
-                                        type="number"
-                                        id="people"
-                                        name="people"
-                                        min="1"
-                                        max="300"
-                                        value={formData.people}
-                                        onChange={handleChange}
-                                        required
-                                    />
+                                    <div className={styles.formGroup}>
+                                        <label htmlFor="duration" className={styles.formLabel}>跑步人數</label>
+                                        <input
+                                            type="number"
+                                            id="people"
+                                            name="people"
+                                            min="1"
+                                            max="50"
+                                            value={formData.people}
+                                            onChange={handleChange}
+                                            required
+                                            className={styles.formInput}
+                                        />
+                                    </div>
                                 </div>
-
                                 <div className={styles.buttonContainer}>
                                     <button type="submit" className={styles.submitButton}>提交記錄</button>
                                 </div>
@@ -208,16 +268,6 @@ export default function RecordPage() {
                             </tr>
                         </tbody>
                     </table>
-                </div>
-
-                <div className={styles.viewMoreContainer}>
-                    <a href="#" className={styles.viewMoreLink}>
-                        查看更多記錄
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M5 12h14"></path>
-                            <path d="M12 5l7 7-7 7"></path>
-                        </svg>
-                    </a>
                 </div>
             </section>
         </div>

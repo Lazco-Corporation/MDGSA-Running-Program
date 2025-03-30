@@ -29,6 +29,9 @@ importers:
       react-dom:
         specifier: ^19.1.0
         version: 19.1.0(react@19.1.0)
+      sweetalert2:
+        specifier: ^11.17.2
+        version: 11.17.2
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -1170,6 +1173,9 @@ packages:
         optional: true
       babel-plugin-macros:
         optional: true
+
+  sweetalert2@11.17.2:
+    resolution: {integrity: sha512-HKxDr1IyV3Lxr3W6sb61qm/p2epFIEdr5EKwteRFHnIg6f8nHFl2kX++DBVz16Mac+fFiU3hMpjq1L6yE2Ge5w==}
 
   tailwindcss@4.0.17:
     resolution: {integrity: sha512-OErSiGzRa6rLiOvaipsDZvLMSpsBZ4ysB4f0VKGXUrjw2jfkJRd6kjRKV2+ZmTCNvwtvgdDam5D7w6WXsdLJZw==}
@@ -2432,6 +2438,8 @@ snapshots:
     dependencies:
       client-only: 0.0.1
       react: 19.1.0
+
+  sweetalert2@11.17.2: {}
 
   tailwindcss@4.0.17: {}
 

@@ -337,29 +337,6 @@
     line-height: 1.6;
 }
 
-/* 響應式設計 */
-@media (min-width: 768px) {
-    .hero {
-        flex-direction: row;
-        text-align: left;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .heroContent {
-        margin-right: 2rem;
-        margin-bottom: 0;
-    }
-
-    .hero p {
-        margin: 0 0 1.5rem;
-    }
-
-    .heroImage {
-        margin-top: 0;
-    }
-}
-
 @media (max-width: 768px) {
     .progressInfo {
         flex-direction: column;
@@ -392,7 +369,7 @@
 
     .progressSection,
     .rankingSection {
-        padding: 1.5rem;
+        padding: 0rem;
     }
 }
 
@@ -436,7 +413,7 @@
 /* Small screens (mobile phones) */
 @media (max-width: 480px) {
     .progressSection {
-        padding: 1.2rem;
+        margin-bottom: 2rem;
     }
 
     .progressInfo {
@@ -701,6 +678,17 @@
 
 /* 響應式樣式 */
 @media (max-width: 768px) {
+
+    .progressWrapper {
+        margin-top: 0;
+        padding: 0rem;
+    }
+
+    .container {
+        margin-top: 0;
+        padding: 1rem;
+    }
+
     .routeIndicatorContent {
         padding: 1.2rem 2rem;
     }
