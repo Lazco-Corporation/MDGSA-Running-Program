@@ -1,4 +1,4 @@
-/* styles/Record.module.css */
+/* styles/Record/Record.module.css */
 
 .container {
     max-width: 1200px;
@@ -6,7 +6,8 @@
     padding: 2rem;
 }
 
-.formSection {
+.formSection,
+.recentRecords {
     background-color: white;
     border-radius: 10px;
     padding: 2rem;
@@ -14,7 +15,8 @@
     margin-bottom: 2rem;
 }
 
-.formTitle {
+.formTitle,
+.recordsTitle {
     font-size: 1.8rem;
     color: #1a3a8f;
     text-align: center;
@@ -33,6 +35,121 @@
     margin: 0 auto;
 }
 
+/* 用戶信息樣式 */
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.userAvatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1a3a8f;
+}
+
+.userDetails {
+    flex-grow: 1;
+}
+
+.welcomeMessage {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1a3a8f;
+    margin: 0 0 0.3rem 0;
+}
+
+.userEmail,
+.userClass {
+    color: #666;
+    margin: 0.2rem 0;
+}
+
+.loadingText,
+.errorText {
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 0.2rem 0;
+}
+
+.errorText {
+    color: #e04f97;
+}
+
+.logoutButton {
+    background-color: #f2f2f2;
+    color: #333;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 100px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logoutButton:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 登入提示樣式 */
+.loginPrompt {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.loginMessage {
+    font-size: 1.2rem;
+    color: #1a3a8f;
+    margin-bottom: 1.5rem;
+}
+
+.googleLoginButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.googleLoginButton:hover {
+    background-color: #3367D6;
+}
+
+.googleIcon {
+    margin-right: 0.5rem;
+}
+
+.loading {
+    text-align: center;
+    color: #666;
+    padding: 1rem;
+}
+
+/* 跑步表單樣式 */
+.runningForm {
+    margin-top: 1rem;
+}
+
 .formGroup {
     margin-bottom: 1.5rem;
 }
@@ -44,9 +161,7 @@
     color: #1a3a8f;
 }
 
-.formGroup input,
-.formGroup select,
-.formGroup textarea {
+.formGroup input {
     width: 100%;
     padding: 0.8rem;
     border: 1px solid #ddd;
@@ -54,63 +169,10 @@
     font-size: 1rem;
 }
 
-.formGroup input:focus,
-.formGroup select:focus,
-.formGroup textarea:focus {
+.formGroup input:focus {
     outline: none;
     border-color: #1a3a8f;
     box-shadow: 0 0 5px rgba(26, 58, 143, 0.3);
-}
-
-.formRow {
-    display: flex;
-    gap: 1rem;
-}
-
-.formRow .formGroup {
-    flex: 1;
-}
-
-.required::after {
-    content: '*';
-    color: #ff6bb3;
-    margin-left: 0.25rem;
-}
-
-.helpText {
-    font-size: 0.85rem;
-    color: #888;
-    margin-top: 0.3rem;
-}
-
-.fileUpload {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 2px dashed #ddd;
-    padding: 2rem;
-    margin-bottom: 1.5rem;
-    border-radius: 5px;
-    transition: border-color 0.3s;
-}
-
-.fileUpload:hover {
-    border-color: #1a3a8f;
-}
-
-.fileIcon {
-    font-size: 2rem;
-    color: #1a3a8f;
-    margin-bottom: 0.5rem;
-}
-
-.fileUpload p {
-    margin-bottom: 1rem;
-    color: #666;
-}
-
-.fileUpload input {
-    width: auto;
 }
 
 .buttonContainer {
@@ -121,9 +183,9 @@
 .submitButton {
     background-color: #ff6bb3;
     color: white;
-    padding: 1rem 3rem;
     border: none;
-    border-radius: 30px;
+    padding: 0.7rem 1.2rem;
+    border-radius: 5px;
     font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
@@ -134,59 +196,125 @@
     background-color: #e04f97;
 }
 
-.recentRecords {
-    background-color: white;
-    border-radius: 10px;
-    padding: 2rem;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-.recordsTitle {
-    font-size: 1.8rem;
-    color: #1a3a8f;
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-
 .recordsTable {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
-.recordsTable th,
+.recordsTable thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+.recordsTable tbody {
+    display: block;
+    max-height: 20rem;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.recordsTable tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.recordsTable th {
+    background-color: #1a3a8f;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
 .recordsTable td {
     padding: 1rem;
     text-align: center;
     border-bottom: 1px solid #eee;
 }
 
-.recordsTable th {
-    background-color: #1a3a8f;
-    color: white;
-}
-
-.recordsTable tr:hover {
+.recordsTable tr:nth-child(odd) {
     background-color: #f9f9f9;
 }
 
-.statusPending {
-    color: orange;
+.recordsTable tr:hover {
+    background-color: #f0f0f0;
 }
 
-.statusApproved {
-    color: green;
+/* 表格容器樣式 */
+.tableContainer {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 查看更多容器 */
+.viewMoreContainer {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.viewMoreLink {
+    color: #1a3a8f;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.viewMoreLink:hover {
+    color: #ff6bb3;
+}
+
+.viewMoreLink svg {
+    margin-left: 0.5rem;
+    transition: transform 0.3s;
+}
+
+.viewMoreLink:hover svg {
+    transform: translateX(5px);
+}
+
+/* 特殊欄位樣式 */
+.distance {
+    font-weight: bold;
+    color: #ff6bb3;
+}
+
+.className {
+    font-weight: bold;
+    color: #1a3a8f;
 }
 
 /* 響應式設計 */
 @media (max-width: 768px) {
-    .formRow {
-        flex-direction: column;
-        gap: 0;
-    }
 
     .formSection,
     .recentRecords {
         padding: 1.5rem;
+    }
+
+    .userInfo {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .userAvatar {
+        margin-bottom: 0.5rem;
+    }
+
+    .logoutButton {
+        margin-top: 0.5rem;
     }
 
     .recordsTable th,
