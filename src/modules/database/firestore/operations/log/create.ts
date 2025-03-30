@@ -7,7 +7,7 @@ export type AddLogEntryOptions = {
   logData: Omit<LogEntry, "id" | "timestamp">;
 };
 
-export async function addLogEntry({
+export async function createByResourceTypeAndResourceId({
   resourceType,
   resourceId,
   logData,

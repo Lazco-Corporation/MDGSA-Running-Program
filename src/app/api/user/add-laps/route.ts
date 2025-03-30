@@ -7,7 +7,7 @@ import { firestoreOperation } from "@/modules/database/firestore";
 import {
   LogResourceId,
   LogResourceType,
-} from "@/modules/database/firestore/operations/log/addLogEntry";
+} from "@/modules/database/firestore/operations/log/create";
 import { recordLogEntry } from "@/modules/recordLogEntry";
 import { getGraduateClassInfo } from "@/modules/getGraduateClassInfo";
 import { AddLapsRequestSchema, AddLapsResponse } from "./types";
@@ -39,15 +39,15 @@ export async function POST(request: Request) {
 
     const userClassInfo = getGraduateClassInfo(userData);
 
-    const previousClassData = await firestoreOperation.class
-      .getByGraduateYearAndGlobalCode({
+    const previousClassData = await firestoreOperation.class.get
+      .byGraduateYearAndGlobalCode({
         graduateYear: Number(process.env.CURRENT_GRADUATE_YEAR),
         globalCode: userClassInfo.globalCode,
       })
       .catch(() => ({}));
 
     const classData =
-      await firestoreOperation.class.upsertByGraduateYearAndGlobalCode({
+      await firestoreOperation.class.upsert.byGraduateYearAndGlobalCode({
         graduateYear: Number(process.env.CURRENT_GRADUATE_YEAR),
         globalCode: userClassInfo.globalCode,
         classData: {

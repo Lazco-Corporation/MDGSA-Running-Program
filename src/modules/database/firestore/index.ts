@@ -1,15 +1,24 @@
 import { getByGraduateYearAndGlobalCode } from "./operations/class/get";
-import { listAll } from "./operations/class/listAll";
+import { listAll } from "./operations/class/list";
 import { upsertByGraduateYearAndGlobalCode } from "./operations/class/upsert";
-import { addLogEntry } from "./operations/log/addLogEntry";
+import { createByResourceTypeAndResourceId } from "./operations/log/create";
 
 export const firestoreOperation = {
   class: {
-    listAll,
-    upsertByGraduateYearAndGlobalCode,
-    getByGraduateYearAndGlobalCode,
+    list: {
+      all: listAll,
+    },
+    upsert: {
+      byGraduateYearAndGlobalCode: upsertByGraduateYearAndGlobalCode,
+    },
+    get: {
+      byGraduateYearAndGlobalCode: getByGraduateYearAndGlobalCode,
+    },
   },
   log: {
-    addLogEntry,
+    create: {
+      byResourceTypeAndResourceId: createByResourceTypeAndResourceId,
+    },
+    list: {},
   },
 };
