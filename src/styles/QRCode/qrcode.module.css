@@ -197,3 +197,42 @@
     font-size: 0.875rem;
     color: #718096;
 }
+
+/* 為透明背景 QR Code 添加的樣式 */
+.qrCodeTransparentWrapper {
+    display: inline-block;
+    background: transparent;
+    padding: 0;
+}
+
+.qrCodeContainerTransparent {
+    display: inline-block;
+    background: transparent;
+    padding: 0;
+}
+
+/* 覆蓋默認的陰影和邊框樣式 */
+.qrCodeWrapper {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.qrCodeContainer {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* 確保 img 標籤顯示透明背景 */
+.qrCodeImage {
+    background: transparent;
+}
+
+/* 調整整體容器樣式，確保適用於透明背景 */
+.container {
+    background: transparent;
+}
+
+.resultContainer {
+    background: transparent;
+}

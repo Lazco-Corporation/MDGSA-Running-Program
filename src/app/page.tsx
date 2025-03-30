@@ -10,9 +10,15 @@ import styles from "@/styles/Home/Home.module.css";
 // Type
 import type { ListAllClassesResponse } from "@/app/api/class/list-all/types";
 
+// Config
+import routeConfig from "@/config/route";
+
 export default function HomePage() {
   const [listAllClasses, setListAllClasses] = useState<ListAllClassesResponse>();
   const [totalLaps, setTotalLaps] = useState<number>(0);
+  const [route, setRoute] = useState(routeConfig());
+  const [targetNow, setTargetNow] = useState("");
+  const [targetNext, setTargetNext] = useState("");
 
   useEffect(() => {
     fetch("/api/class/list-all").then((res) => res.json()).then((data) => setListAllClasses(data));
@@ -34,15 +40,15 @@ export default function HomePage() {
               </div>
               <div className={styles.progressStat}>
                 <h3>目前位置</h3>
-                <p className={styles.destination}>環繞地球一圈</p>
+                <p className={styles.destination}>{targetNow}</p>
               </div>
               <div className={styles.progressStat}>
                 <h3>下個目標</h3>
-                <p className={styles.destination}>地球到月球</p>
+                <p className={styles.destination}>{targetNext}</p>
               </div>
               <div className={styles.progressStat}>
                 <h3>畢業班數量</h3>
-                <p>56 班</p>
+                <p>55 班</p>
               </div>
             </div>
 

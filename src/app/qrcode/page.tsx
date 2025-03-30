@@ -16,11 +16,10 @@ const QRCodeWithLogo = () => {
     const [logo, setLogo] = useState<string | null>('/images/icon-04.png'); // 預設徽標路徑
     const [qrCodeSvg, setQrCodeSvg] = useState('');
     const [finalQrCode, setFinalQrCode] = useState('');
-    const [borderStyle, setBorderStyle] = useState(true); // For toggling border style
     const [qrColor, setQrColor] = useState('#1A348E'); // 更新為大寫顏色代碼，確保一致性
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const logoSizePercent = 35; // 徽標大小比例
-    const whiteBgSizePercent = 35; // 白色背景大小比例
+    const clearAreaSizePercent = 35; // 中間透明區域大小比例
 
     // 完整的替換所有黑色為指定顏色的函數
     const replaceAllBlack = (svg: string, color: string) => {
@@ -29,6 +28,19 @@ const QRCodeWithLogo = () => {
             .replace(/#000000/g, color)
             .replace(/fill="black"/g, `fill="${color}"`)
             .replace(/stroke="black"/g, `stroke="${color}"`);
+    };
+
+    // 移除SVG中的白色背景
+    const removeWhiteBackground = (svg: string) => {
+        // 移除填充白色的背景矩形
+        svg = svg.replace(/<rect[^>]*width="100%"[^>]*height="100%"[^>]*fill="white"[^>]*\/>/g, '');
+        // 移除可能的背景樣式
+        svg = svg.replace(/style="background-color:\s*white"/g, 'style="background-color:transparent"');
+        // 將任何可能的背景顏色改為透明
+        svg = svg.replace(/background-color:\s*white/g, 'background-color:transparent');
+        // 移除可能的背景填充
+        svg = svg.replace(/background:\s*white/g, 'background:transparent');
+        return svg;
     };
 
     // 生成 QR 碼的函數
@@ -49,6 +61,9 @@ const QRCodeWithLogo = () => {
 
         // 將所有黑色替換為選定的顏色
         svg = replaceAllBlack(svg, qrColor);
+
+        // 移除白色背景
+        svg = removeWhiteBackground(svg);
 
         // 尋找位置檢測圖案模塊並添加特殊半徑
         // 這些是角落的三個較大的正方形圖案
@@ -82,12 +97,12 @@ const QRCodeWithLogo = () => {
         }
     };
 
-    // 將 QR 碼和徽標結合的函數
+    // 將 QR 碼和徽標結合的函數 - 使用完全透明的方式
     const combineQrCodeAndLogo = () => {
         if (!qrCodeSvg || !logo || !canvasRef.current) return;
 
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true }); // 明確啟用 alpha 通道
         if (!ctx) return;
 
         const qrSize = 300; // 固定的 QR 碼大小
@@ -95,18 +110,39 @@ const QRCodeWithLogo = () => {
         canvas.width = qrSize;
         canvas.height = qrSize;
 
+        // 清除畫布為透明
+        ctx.clearRect(0, 0, qrSize, qrSize);
+
         // 解析 SVG
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(qrCodeSvg, 'image/svg+xml');
+
+        // 確保 SVG 有透明背景
+        const svgElement = svgDoc.documentElement;
+        svgElement.style.backgroundColor = 'transparent';
+
         const svgString = new XMLSerializer().serializeToString(svgDoc);
 
-        // 創建 QR 碼圖像 (使用原生 HTMLImageElement 而非 Next.js Image)
+        // 創建 QR 碼圖像
         const qrImg = new window.Image();
         qrImg.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
 
         qrImg.onload = () => {
             // 繪製 QR 碼
             ctx.drawImage(qrImg, 0, 0, qrSize, qrSize);
+
+            // 計算中央清除區域大小
+            const clearSize = qrSize * (clearAreaSizePercent / 100);
+            const clearX = qrSize / 2 - clearSize / 2;
+            const clearY = qrSize / 2 - clearSize / 2;
+
+            // 清除中央區域為透明
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = 'rgba(0, 0, 0, 1)'; // 黑色，但會被 destination-out 轉換為透明
+            ctx.fillRect(clearX, clearY, clearSize, clearSize);
+
+            // 恢復正常繪圖模式
+            ctx.globalCompositeOperation = 'source-over';
 
             // 繪製中心的徽標
             const logoImg = new window.Image();
@@ -116,17 +152,7 @@ const QRCodeWithLogo = () => {
             logoImg.onload = () => {
                 const logoSize = qrSize * (logoSizePercent / 100);
 
-                // 為徽標創建方形白色背景
-                const bgSize = qrSize * (whiteBgSizePercent / 100);
-                ctx.fillStyle = "white";
-                ctx.fillRect(
-                    qrSize / 2 - bgSize / 2,
-                    qrSize / 2 - bgSize / 2,
-                    bgSize,
-                    bgSize
-                );
-
-                // 保持徽標的原始寬高比例繪製
+                // 計算徽標繪製尺寸，保持原始比例
                 const logoAspect = logoImg.width / logoImg.height;
                 let drawWidth = logoSize;
                 let drawHeight = logoSize;
@@ -140,14 +166,14 @@ const QRCodeWithLogo = () => {
                     drawWidth = logoSize * logoAspect;
                 }
 
-                // 將徽標置於白色區域中央
+                // 將徽標置於中央區域
                 const adjustedLogoX = qrSize / 2 - drawWidth / 2;
                 const adjustedLogoY = qrSize / 2 - drawHeight / 2;
 
-                // 繪製徽標
+                // 繪製徽標（無需白色背景）
                 ctx.drawImage(logoImg, adjustedLogoX, adjustedLogoY, drawWidth, drawHeight);
 
-                // 轉換為數據 URL
+                // 轉換為數據 URL (使用PNG格式以確保支持透明度)
                 setFinalQrCode(canvas.toDataURL('image/png'));
             };
 
@@ -272,24 +298,12 @@ const QRCodeWithLogo = () => {
                 />
                 {logo && (
                     <div className={styles.logoPreview}>
-                        {/* <p className={styles.previewLabel}>中間圖示:</p> */}
                         <img src={logo} alt="Logo" className={styles.logoImage} />
                     </div>
                 )}
             </div>
 
             <div className={styles.buttonGroup}>
-                {/* <button
-                    onClick={() => {
-                        const generatedSvg = generateQRCode(url);
-                        setQrCodeSvg(generatedSvg);
-                        if (logo) combineQrCodeAndLogo();
-                    }}
-                    className={styles.generateButton}
-                >
-                    生成二維碼
-                </button> */}
-
                 {finalQrCode && (
                     <button
                         onClick={() => {
@@ -308,39 +322,28 @@ const QRCodeWithLogo = () => {
 
             {finalQrCode ? (
                 <div className={styles.resultContainer}>
-                    {/* <p className={styles.resultLabel}>您的帶徽標二維碼:</p> */}
-                    <div className={`${styles.qrCodeWrapper} ${borderStyle ? styles.withShadow : ''}`}>
+                    <div className={styles.qrCodeTransparentWrapper}>
                         <img
                             src={finalQrCode}
                             alt="QR Code with Logo"
                             className={styles.qrCodeImage}
+                            style={{
+                                background: 'none',
+                                backgroundColor: 'transparent',
+                                mixBlendMode: 'normal'
+                            }}
                         />
                     </div>
-                    {/* <div className={styles.shadowToggle}>
-                        <label className={styles.toggleLabel}>
-                            <input
-                                type="checkbox"
-                                checked={borderStyle}
-                                onChange={() => setBorderStyle(!borderStyle)}
-                                className={styles.checkbox}
-                            />
-                            顯示邊框陰影
-                        </label>
-                    </div> */}
                 </div>
             ) : qrCodeSvg ? (
                 <div className={styles.resultContainer}>
-                    {/* <p className={styles.resultLabel}>您的二維碼:</p> */}
                     <div
-                        className={styles.qrCodeContainer}
+                        className={styles.qrCodeContainerTransparent}
                         dangerouslySetInnerHTML={{ __html: qrCodeSvg }}
+                        style={{ background: 'transparent' }}
                     />
                 </div>
             ) : null}
-
-            {/* <div className={styles.urlDisplay}>
-                <p>掃描此二維碼可訪問: {url}</p>
-            </div> */}
 
             {/* 用於渲染組合後 QR 碼的隱藏畫布 */}
             <canvas ref={canvasRef} style={{ display: 'none' }} />
