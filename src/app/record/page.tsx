@@ -11,9 +11,10 @@ import styles from '@/styles/Record/Record.module.css';
 
 // Type
 import type { ExtendedNextAuthSession } from "@/app/api/auth/[...nextauth]/types";
+import axios from "axios";
+import { last } from "lodash";
 
 export default function RecordPage() {
-    const router = useRouter();
     const { data: session, status } = useSession();
     const [userData, setUserData] = useState<ExtendedNextAuthSession | undefined | null>(undefined);
     const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +34,22 @@ export default function RecordPage() {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        alert('跑步記錄提交成功！');
+        console.log(userData?.user?.email, formData.laps, formData.people)
+        var data = JSON.stringify({
+            "email": userData?.user?.email,
+            "laps": formData.laps,
+            "headcount": formData.people
+        });
+
+        axios.post("/api/user/add-laps", {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
+        }).then((res) => res.statusText).then((data) => {
+            console.log(data);
+        });
+
 
         setFormData({
             laps: 1,
