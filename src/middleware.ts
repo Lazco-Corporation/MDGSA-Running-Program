@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const { shouldRedirect, response } = generateMainHostRedirect({
-    request,
-    mainHost: "run.mingdao.edu.tw",
-  });
-  if (shouldRedirect) {
-    return response;
-  }
+  // const { shouldRedirect, response } = generateMainHostRedirect({
+  //   request,
+  //   mainHost: "run.mingdao.edu.tw",
+  // });
+  // if (shouldRedirect) {
+  //   return response;
+  // }
 
-  return response;
+  // return response;
 }
 
 export const config = {
