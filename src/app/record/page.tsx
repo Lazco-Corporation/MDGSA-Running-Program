@@ -3,6 +3,8 @@
 // Module
 import { useState, useEffect, useCallback } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 // Style
 import styles from '@/styles/Record/Record.module.css';
@@ -11,8 +13,10 @@ import styles from '@/styles/Record/Record.module.css';
 import type { ExtendedNextAuthSession } from "@/app/api/auth/[...nextauth]/types";
 
 export default function RecordPage() {
+    const router = useRouter();
     const { data: session, status } = useSession();
     const [userData, setUserData] = useState<ExtendedNextAuthSession | undefined | null>(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [formData, setFormData] = useState({
         laps: 1,
@@ -46,11 +50,66 @@ export default function RecordPage() {
     }, []);
 
     useEffect(() => {
-        // 解決 TypeScript 錯誤，允許 session 為 null
-        setUserData(session as ExtendedNextAuthSession | null);
+        setUserData(session as ExtendedNextAuthSession);
+
         console.log("Session status:", status);
         console.log("Session data:", session);
     }, [status, session]);
+
+    useEffect(() => {
+        if (userData?.belongsToMingdao === false) {
+            Swal.fire({
+                title: "登入失敗",
+                text: "您必須使用明道中學所配發的帳號才能登入!",
+                icon: "error",
+                confirmButtonText: "好的",
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                customClass: {
+                    container: "select-none",
+                },
+                focusConfirm: false,
+                background: "#fff url(/images/trees.png)",
+                backdrop: `
+                  rgba(0,0,123,0.4)
+                  url("/images/nyan-cat.gif")
+                  left top
+                  no-repeat
+                `,
+                preConfirm: () => {
+                    signOut({ callbackUrl: "/" });
+                }
+            });
+        }
+        if (userData?.isGraduateClass === false) {
+
+            Swal.fire({
+                title: "登入失敗",
+                text: "您必須是應屆畢業生或學校老師才能登入!",
+                icon: "error",
+                confirmButtonText: "好的",
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                customClass: {
+                    container: "select-none",
+                },
+                focusConfirm: false,
+                background: "#fff url(/images/trees.png)",
+                backdrop: `
+                  rgba(0,0,123,0.4)
+                  url("/images/nyan-cat.gif")
+                  left top
+                  no-repeat
+                `,
+                preConfirm: () => {
+                    signOut({ callbackUrl: "/" });
+                }
+            });
+        }
+        if (userData?.belongsToMingdao === true && userData?.isGraduateClass === true) {
+            setIsLoading(false);
+        }
+    }, [userData])
 
     return (
         <div className={styles.container}>
@@ -61,7 +120,7 @@ export default function RecordPage() {
                 <div className={styles.formContainer}>
                     {status === "loading" ? (
                         <div className={styles.loading}>載入中...</div>
-                    ) : ((status === "authenticated" && userData) ? (
+                    ) : ((!isLoading && status === "authenticated" && userData) ? (
                         <>
                             <div className={styles.userInfo}>
                                 {session.user?.image && (

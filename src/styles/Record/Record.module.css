@@ -419,6 +419,9 @@
 
 /* 響應式設計 */
 @media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
 
     .formSection,
     .recentRecords {
