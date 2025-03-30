@@ -46,8 +46,9 @@ export default function RecordPage() {
                 'Content-Type': 'application/json'
             },
             body: data
-        }).then((res) => res.statusText).then((data) => {
-            if (data === "OK") {
+        }).then((res) => res).then((data) => {
+            console.log(data.status, data.statusText)
+            if (data.status === 200) {
                 Swal.fire({
                     title: "紀錄成功",
                     text: "回到首頁看看自己的班級線在第幾名吧!",
