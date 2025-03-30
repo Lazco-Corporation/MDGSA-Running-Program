@@ -11,6 +11,7 @@ import styles from '@/styles/Record/Record.module.css';
 
 // Type
 import type { ExtendedNextAuthSession } from "@/app/api/auth/[...nextauth]/types";
+import type { AddedLapsResponse } from "@/app/api/user/logs/added-laps/types";
 
 
 export default function RecordPage() {
@@ -18,6 +19,7 @@ export default function RecordPage() {
     const { data: session, status } = useSession();
     const [userData, setUserData] = useState<ExtendedNextAuthSession | undefined | null>(undefined);
     const [isLoading, setIsLoading] = useState(true);
+    const [logsList, setLogsList] = useState<AddedLapsResponse>();
 
     const [formData, setFormData] = useState({
         laps: 1,
@@ -46,13 +48,17 @@ export default function RecordPage() {
                 'Content-Type': 'application/json'
             },
             body: data
-        }).then((res) => res.statusText).then((data) => {
-            if (data === "OK") {
+        }).then((res) => res.status).then((data) => {
+            if (data === 200) {
                 Swal.fire({
                     title: "紀錄成功",
                     text: "回到首頁看看自己的班級線在第幾名吧!",
                     icon: "success",
+                    confirmButtonColor: "#1A348E",
                     confirmButtonText: "好的",
+                    denyButtonText: "返回首頁",
+                    showDenyButton: true,
+                    denyButtonColor: "#E7398E",
                     allowEscapeKey: false,
                     allowOutsideClick: false,
                     customClass: {
@@ -65,7 +71,7 @@ export default function RecordPage() {
                       left top
                       no-repeat
                     `,
-                    preConfirm: () => {
+                    preDeny: () => {
                         router.push("/");
                     }
                 });
@@ -74,7 +80,11 @@ export default function RecordPage() {
                     title: "紀錄失敗",
                     text: "系統發生錯誤，請稍後再嘗試！",
                     icon: "error",
+                    confirmButtonColor: "#1A348E",
                     confirmButtonText: "好的",
+                    denyButtonText: "返回首頁",
+                    showDenyButton: true,
+                    denyButtonColor: "#E7398E",
                     allowEscapeKey: false,
                     allowOutsideClick: false,
                     customClass: {
@@ -167,6 +177,37 @@ export default function RecordPage() {
             setIsLoading(false);
         }
     }, [userData])
+
+    useEffect(() => {
+        if (userData?.user?.email) {
+            fetch("/api/user/logs/added-laps", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: userData?.user?.email
+                })
+            })
+                .then((res) => res.json())
+                .then((data: AddedLapsResponse) => setLogsList(data));
+        }
+
+    }, [userData])
+
+    function timestampToDate(timestamp: number) {
+        const date = new Date(timestamp);
+        const formattedDateTime = date.toLocaleString('zh-TW', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false // 使用24小时制
+        });
+        return formattedDateTime;
+    }
 
     return (
         <div className={styles.container}>
@@ -288,12 +329,13 @@ export default function RecordPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>2025-03-28</td>
-                                    <td className={styles.distance}>2</td>
-                                    <td className={styles.className}>46</td>
-                                </tr>
-
+                                {logsList?.addedLaps.map((logItem, index) => (
+                                    <tr key={index}>
+                                        <td>{timestampToDate(logItem.timestamp)}</td>
+                                        <td className={styles.distance}>{logItem.laps}</td>
+                                        <td className={styles.className}>{logItem.headcount}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
