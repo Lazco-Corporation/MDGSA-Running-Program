@@ -14,11 +14,13 @@ export async function createByResourceTypeAndResourceId({
   resourceId,
   logData,
 }: AddLogEntryOptions): Promise<string | null> {
+  const cleanedLogData = JSON.parse(JSON.stringify(logData));
+
   try {
     const timestamp = Date.now();
 
     const logEntry: Omit<LogEntry, "id"> = {
-      ...logData,
+      ...cleanedLogData,
       timestamp,
     };
 
@@ -35,7 +37,7 @@ export async function createByResourceTypeAndResourceId({
   } catch (_error) {
     throw new ClientError(
       {
-        errorMessage: "Failed to fetch classes",
+        errorMessage: "Failed to create log entry",
       },
       HttpStatus.INTERNAL_SERVER_ERROR,
     );

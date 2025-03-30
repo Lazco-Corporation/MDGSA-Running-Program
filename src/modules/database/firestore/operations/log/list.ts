@@ -32,8 +32,6 @@ export async function listByResourceTypeAndResourceId({
 
     return logEntries;
   } catch (_error) {
-    console.log(_error);
-
     throw new ClientError(
       {
         errorMessage: "Failed to fetch logs",

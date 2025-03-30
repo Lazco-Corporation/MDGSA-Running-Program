@@ -1,5 +1,3 @@
-import { ClientError } from "@/modules/clientError";
-
 export type LogEntry = {
   id: string;
   timestamp: number;
@@ -17,7 +15,7 @@ export type LogEntry = {
   };
   status: "success" | "failure";
   errorDetails?: {
-    clientError?: ClientError;
+    clientError?: Record<string, any>;
     otherError?: any;
   };
 };
