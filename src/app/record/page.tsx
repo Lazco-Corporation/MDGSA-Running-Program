@@ -11,10 +11,10 @@ import styles from '@/styles/Record/Record.module.css';
 
 // Type
 import type { ExtendedNextAuthSession } from "@/app/api/auth/[...nextauth]/types";
-import axios from "axios";
-import { last } from "lodash";
+
 
 export default function RecordPage() {
+    const router = useRouter();
     const { data: session, status } = useSession();
     const [userData, setUserData] = useState<ExtendedNextAuthSession | undefined | null>(undefined);
     const [isLoading, setIsLoading] = useState(true);
@@ -34,22 +34,43 @@ export default function RecordPage() {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        console.log(userData?.user?.email, formData.laps, formData.people)
         var data = JSON.stringify({
             "email": userData?.user?.email,
             "laps": formData.laps,
             "headcount": formData.people
         });
 
-        axios.post("/api/user/add-laps", {
+        fetch("/api/user/add-laps", {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            data: data
+            body: data
         }).then((res) => res.statusText).then((data) => {
-            console.log(data);
+            if (data === "OK") {
+                Swal.fire({
+                    title: "紀錄成功",
+                    text: "回到首頁看看自己的班級線在第幾名吧!",
+                    icon: "success",
+                    confirmButtonText: "好的",
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: "select-none",
+                    },
+                    focusConfirm: false,
+                    backdrop: `
+                      rgba(0,0,123,0.4)
+                      url("/images/nyan-cat.gif")
+                      left top
+                      no-repeat
+                    `,
+                    preConfirm: () => {
+                        router.push("/");
+                    }
+                });
+            }
         });
-
 
         setFormData({
             laps: 1,
@@ -67,9 +88,6 @@ export default function RecordPage() {
 
     useEffect(() => {
         setUserData(session as ExtendedNextAuthSession);
-
-        console.log("Session status:", status);
-        console.log("Session data:", session);
     }, [status, session]);
 
     useEffect(() => {
