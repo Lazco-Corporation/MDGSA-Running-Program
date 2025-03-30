@@ -8,14 +8,11 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import styles from '@/styles/Record/Record.module.css';
 
 // Type
-import type { ProfileResponse } from "@/app/api/user/profile/types";
+import type { ExtendedNextAuthSession } from "@/app/api/auth/[...nextauth]/types";
 
 export default function RecordPage() {
+    // 使用泛型來指定 session 的類型
     const { data: session, status } = useSession();
-    const [isLoading, setIsLoading] = useState(true);
-    const [profileData, setProfileData] = useState<ProfileResponse | null>(null);
-    const [profileError, setProfileError] = useState<string | null>(null);
-    const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
     const [formData, setFormData] = useState({
         laps: 1,
@@ -42,60 +39,19 @@ export default function RecordPage() {
         });
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies:
-    useEffect(() => {
-        setIsLoading(false);
-    }, [status]);
-
-    const fetchUserProfile = useCallback(async () => {
-        if (!session?.user?.email) {
-            return;
-        }
-
-        setIsLoadingProfile(true);
-        setProfileError(null);
-
-        try {
-            const response = await fetch("/api/user/profile", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email: session.user.email }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.errorMessage || `Error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            setProfileData(data);
-        } catch (error) {
-            setProfileError(
-                error instanceof Error ? error.message : "Failed to load profile",
-            );
-            console.error("Error fetching profile:", error);
-        } finally {
-            setIsLoadingProfile(false);
-        }
-    }, [session?.user?.email]);
-
-    useEffect(() => {
-        if (session?.user?.email) {
-            fetchUserProfile();
-        }
-    }, [session, fetchUserProfile]);
-
     const handleLogin = useCallback(() => {
-        signIn("google", { callbackUrl: window.location.href });
+        signIn("google");
     }, []);
 
     const handleLogout = useCallback(() => {
         signOut({ callbackUrl: window.location.href });
     }, []);
 
-    console.log(profileData)
+    useEffect(() => {
+        console.log("Session status:", status);
+        console.log("Session data:", session);
+    }, [status, session]);
+
     return (
         <div className={styles.container}>
             <section className={styles.formSection}>
@@ -103,9 +59,9 @@ export default function RecordPage() {
                 <p className={styles.formDescription}>每一步都計數！填寫您的跑步資訊，為班級貢獻里程。</p>
 
                 <div className={styles.formContainer}>
-                    {isLoading ? (
+                    {status === "loading" ? (
                         <div className={styles.loading}>載入中...</div>
-                    ) : session ? (
+                    ) : ((status === "authenticated") ? (
                         /* 已登入用戶顯示表單 */
                         <>
                             <div className={styles.userInfo}>
@@ -121,16 +77,15 @@ export default function RecordPage() {
                                         歡迎, {session.user?.name || "用戶"}
                                     </p>
                                     <p className={styles.userEmail}>{session.user?.email?.split("@")[0].toUpperCase()}@{session.user?.email?.split("@")[1]}</p>
-                                    {isLoadingProfile ? (
+                                    {/* {isLoadingProfile ? (
                                         <p className={styles.loadingText}>載入用戶資料中...</p>
                                     ) : profileError ? (
                                         <p className={styles.errorText}>{profileError}</p>
                                     ) : profileData && (
                                         <p className={styles.userClass}>
                                             班級: 未設定
-                                            {/* 班級: {profileData?.className || "未設定"} */}
                                         </p>
-                                    )}
+                                    )} */}
                                 </div>
                                 <button
                                     onClick={handleLogout}
@@ -200,7 +155,7 @@ export default function RecordPage() {
                                 </div>
                             </button>
                         </div>
-                    )}
+                    ))}
                 </div>
             </section>
 
