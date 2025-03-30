@@ -1,22 +1,9 @@
-import { NextResponse } from "next/server";
-
-import { ClientError } from "@/modules/clientError";
 import { HttpStatus } from "@/modules/http/statusCodes";
+import { requestHandler } from "@/modules/requestHandler";
 
-export async function GET() {
-  try {
-    return teapot();
-  } catch (error) {
-    if (error instanceof ClientError) {
-      return NextResponse.json(error.payload, { status: error.code || 500 });
-    }
-
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR },
-    );
-  }
-}
+export const GET = requestHandler.withoutAuth(() => {
+  return teapot();
+});
 
 function teapot() {
   const teapotAscii =

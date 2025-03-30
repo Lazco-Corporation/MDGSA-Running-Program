@@ -3,36 +3,26 @@ import { NextResponse } from "next/server";
 import { ClientError } from "@/modules/clientError";
 import { mdApi } from "@/modules/mdApi";
 import { HttpStatus } from "@/modules/http/statusCodes";
+import { requestHandler } from "@/modules/requestHandler";
 import { ProfileRequestSchema, ProfileResponse } from "./types";
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json().catch(() => ({}));
+export const POST = requestHandler.withAuth(async (request: Request) => {
+  const body = await request.json().catch(() => ({}));
 
-    const parsedResult = ProfileRequestSchema.safeParse(body);
-    if (!parsedResult.success) {
-      throw new ClientError(
-        {
-          errorObject: parsedResult.error.flatten().fieldErrors,
-          errorMessage: "Request body does not match expected schema",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const { email } = parsedResult.data;
-
-    const userData = await mdApi.receiveUserData.email({ email });
-
-    return NextResponse.json({ userData } as ProfileResponse);
-  } catch (error) {
-    if (error instanceof ClientError) {
-      return NextResponse.json(error.payload, { status: error.code || 500 });
-    }
-
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR },
+  const parsedResult = ProfileRequestSchema.safeParse(body);
+  if (!parsedResult.success) {
+    throw new ClientError(
+      {
+        errorObject: parsedResult.error.flatten().fieldErrors,
+        errorMessage: "Request body does not match expected schema",
+      },
+      HttpStatus.BAD_REQUEST,
     );
   }
-}
+
+  const { email } = parsedResult.data;
+
+  const userData = await mdApi.receiveUserData.email({ email });
+
+  return NextResponse.json({ userData } as ProfileResponse);
+});

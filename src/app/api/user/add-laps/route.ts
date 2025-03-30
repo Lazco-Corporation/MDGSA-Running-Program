@@ -10,9 +10,10 @@ import {
 } from "@/modules/database/firestore/types/Log";
 import { recordLogEntry } from "@/modules/recordLogEntry";
 import { getGraduateClassInfo } from "@/modules/getGraduateClassInfo";
+import { requestHandler } from "@/modules/requestHandler";
 import { AddLapsRequestSchema, AddLapsResponse } from "./types";
 
-export async function POST(request: Request) {
+export const POST = requestHandler.withAuth(async (request: Request) => {
   const requestStartTime = Date.now();
   const body = await request.json().catch(() => ({}));
   const userEmailForLogging = body.email;
@@ -98,13 +99,6 @@ export async function POST(request: Request) {
       });
     }
 
-    if (error instanceof ClientError) {
-      return NextResponse.json(error.payload, { status: error.code || 500 });
-    }
-
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: HttpStatus.INTERNAL_SERVER_ERROR },
-    );
+    throw error;
   }
-}
+});
