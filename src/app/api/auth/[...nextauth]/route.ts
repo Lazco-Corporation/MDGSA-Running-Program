@@ -1,6 +1,12 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+import { mdApi } from "@/modules/mdApi";
+import { ExtendedNextAuthToken, ExtendedNextAuthSession } from "./types";
+import { getGraduateClassInfo } from "@/modules/getGraduateClassInfo";
+import { ClientError } from "@/modules/clientError";
+import { HttpStatus } from "@/modules/http/statusCodes";
+
 const handler = NextAuth({
   secret:
     process.env.NEXTAUTH_SECRET ||
@@ -24,23 +30,71 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ account, profile }) {
-      return true;
-    },
-    async jwt({ token, account }) {
-      const _token = token;
-      if (account) {
-        _token.accessToken = account?.access_token;
+    async signIn({ profile }) {
+      if (!profile?.email) {
+        return false;
       }
 
-      return _token;
+      return true;
     },
-    async session({ session, token }) {
-      const _session: any = session;
-      const _token: any = token;
-      _session.accessToken = _token.accessToken;
 
-      return _session;
+    async jwt({ token, account, profile }) {
+      const email = profile?.email;
+      if (!email) {
+        throw new Error("Invalid email");
+      }
+
+      const extendedToken = token as ExtendedNextAuthToken;
+
+      if (account) {
+        extendedToken.accessToken = account.access_token;
+
+        const userData = await mdApi.receiveUserData
+          .email({ email })
+          .catch((error) => {
+            if (
+              error instanceof ClientError &&
+              error.code === HttpStatus.NOT_FOUND
+            ) {
+              return undefined;
+            }
+            throw error;
+          });
+        extendedToken.userAttributes = userData;
+        extendedToken.belongsToMingdao = Boolean(userData);
+
+        if (userData) {
+          try {
+            const classInfo = getGraduateClassInfo(userData);
+            extendedToken.isGraduateClass = Boolean(classInfo);
+          } catch (error) {
+            if (
+              error instanceof ClientError &&
+              error.code === HttpStatus.FORBIDDEN
+            ) {
+              extendedToken.isGraduateClass = false;
+            }
+
+            throw error;
+          }
+        }
+      }
+
+      return extendedToken;
+    },
+
+    async session({ session, token }) {
+      const extendedSession = session as ExtendedNextAuthSession;
+      const extendedToken = token as ExtendedNextAuthToken;
+
+      const { accessToken, isGraduateClass, belongsToMingdao, userAttributes } =
+        extendedToken;
+      extendedSession.accessToken = accessToken;
+      extendedSession.isGraduateClass = isGraduateClass;
+      extendedSession.belongsToMingdao = belongsToMingdao;
+      extendedSession.userAttributes = userAttributes;
+
+      return extendedSession;
     },
   },
 });
