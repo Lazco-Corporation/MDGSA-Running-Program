@@ -3,6 +3,7 @@
 // Module
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import calculateProgress from "@/modules/caculateProgress";
 
 // Style
 import styles from "@/styles/Home/Home.module.css";
@@ -16,15 +17,27 @@ import routeConfig from "@/config/route";
 export default function HomePage() {
   const [listAllClasses, setListAllClasses] = useState<ListAllClassesResponse>();
   const [totalLaps, setTotalLaps] = useState<number>(0);
-  const [route, setRoute] = useState<any>();
   const [targetNow, setTargetNow] = useState("");
   const [targetNext, setTargetNext] = useState("");
+  const [currentDistance, setCurrentDistance] = useState<number>(0);
+  const [nextDistance, setNextDistance] = useState<number>(0);
+  const [progressPercentage, setProgressPercentage] = useState<number>(0);
 
   useEffect(() => {
     fetch("/api/class/list-all").then((res) => res.json()).then((data) => setListAllClasses(data));
-    fetch("/api/class/total-laps").then((res) => res.json()).then((data) => setTotalLaps(data.totalLaps));
-    setRoute(routeConfig())
-    
+    fetch("/api/class/total-laps").then((res) => res.json()).then((data) => {
+      const laps = data.totalLaps;
+      const totalDistance = laps * 0.4;
+      const routeData = routeConfig();
+      const progress = calculateProgress(totalDistance, routeData);
+
+      setTotalLaps(laps);
+      setTargetNow(progress.current);
+      setTargetNext(progress.next);
+      setCurrentDistance(progress.currentDistance);
+      setNextDistance(progress.nextDistance);
+      setProgressPercentage(progress.progressPercentage);
+    });
   }, []);
 
   return (
@@ -54,13 +67,20 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className={styles.progressBarContainer}>
-              <div className={styles.progressBar}></div>
+            <div className={styles.progressBarWrapper}>
+              <div className={styles.progressBarLabel}>
+                {currentDistance.toLocaleString("zh-TW")} 公里
+              </div>
+              <div className={styles.progressBarContainer}>
+                <div
+                  className={styles.progressBar}
+                  style={{ width: `${progressPercentage}%` }}
+                ></div>
+              </div>
+              <div className={styles.progressBarLabel}>
+                {nextDistance.toLocaleString("zh-TW")} 公里
+              </div>
             </div>
-
-            {/* <p className={styles.progressMessage}>
-              恭喜！我們已經環繞地球一圈了！下一站：月球（距離：384,400 公里）
-            </p> */}
 
             <Link href="/record" className={styles.joinButton}>
               記錄我的跑步
