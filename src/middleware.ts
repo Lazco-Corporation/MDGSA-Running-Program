@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  // const { shouldRedirect, response } = generateMainHostRedirect({
-  //   request,
-  //   mainHost: "run.mingdao.edu.tw",
-  // });
-  // if (shouldRedirect) {
-  //   return response;
-  // }
-  // return response;
-  const host = request.nextUrl.host;
-  console.log(`host: ${host}`);
+  const { shouldRedirect, response } = generateMainHostRedirect({
+    request,
+    mainHost: "run.mingdao.edu.tw",
+  });
+  if (shouldRedirect) {
+    return response;
+  }
+
+  return response;
 }
 
 export const config = {
@@ -19,7 +18,7 @@ export const config = {
 
 function generateMainHostRedirect({
   request,
-  ignoreHosts = [/localhost:3\d{3}/, /127.0.0.1:3\d{3}/],
+  ignoreHosts = [/localhost:\d{4}/, /127.0.0.1:\d{4}/],
   mainHost,
 }: {
   request: NextRequest;
@@ -28,10 +27,20 @@ function generateMainHostRedirect({
 }) {
   const host = request.nextUrl.host;
 
-  const shouldIgnore = [...ignoreHosts, mainHost].some((pattern) => {
-    const regex = typeof pattern === "string" ? new RegExp(pattern) : pattern;
-    return regex.test(host);
-  });
+  const shouldIgnore = [
+    ...ignoreHosts,
+    mainHost,
+    process.env.NEXT_PUBLIC_VERCEL_URL || undefined,
+    (process.env.HOST &&
+      process.env.PORT &&
+      `${process.env.HOST}:${process.env.PORT}`) ||
+      undefined,
+  ]
+    .filter((host) => host !== undefined && host !== null)
+    .some((pattern) => {
+      const regex = typeof pattern === "string" ? new RegExp(pattern) : pattern;
+      return regex.test(host);
+    });
 
   if (!shouldIgnore) {
     const path = request.nextUrl.pathname;
