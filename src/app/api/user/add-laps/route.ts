@@ -1,17 +1,15 @@
 import { NextResponse } from "next/server";
 
-import { graduateClasses } from "@/modules/graduateClasses";
 import { mdApi } from "@/modules/mdApi";
 import { ClientError } from "@/modules/clientError";
 import { HttpStatus } from "@/modules/http/statusCodes";
-import { GoogleUserCheckResponse } from "@/modules/mdApi/methods/googleUserCheck";
 import { firestoreOperation } from "@/modules/database/firestore";
-import { administrationTeam } from "@/modules/graduateClasses/classes/administrationTeam";
 import {
   LogResourceId,
   LogResourceType,
 } from "@/modules/database/firestore/operations/log/addLogEntry";
 import { recordLogEntry } from "@/modules/recordLogEntry";
+import { getGraduateClassInfo } from "@/modules/getGraduateClassInfo";
 import { AddLapsRequestSchema, AddLapsResponse } from "./types";
 
 export async function POST(request: Request) {
@@ -39,7 +37,7 @@ export async function POST(request: Request) {
       email,
     });
 
-    const userClassInfo = getUserClassInfo(userData);
+    const userClassInfo = getGraduateClassInfo(userData);
 
     const previousClassData = await firestoreOperation.class
       .getByGraduateYearAndGlobalCode({
@@ -103,40 +101,6 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: HttpStatus.INTERNAL_SERVER_ERROR },
-    );
-  }
-}
-
-function getUserClassInfo(userData: GoogleUserCheckResponse) {
-  if (userData?.userIdentity === "stu") {
-    const className = userData.className;
-
-    const classInfo = graduateClasses[
-      Number(process.env.CURRENT_GRADUATE_YEAR) as keyof typeof graduateClasses
-    ].all.find((classInfo) => classInfo.name === className);
-    if (classInfo) {
-      return classInfo;
-    } else {
-      throw new ClientError(
-        { errorMessage: "Not graduate class" },
-        HttpStatus.FORBIDDEN,
-      );
-    }
-  } else if (userData?.userIdentity === "teach") {
-    const className = userData.className;
-
-    const classInfo = graduateClasses[
-      Number(process.env.CURRENT_GRADUATE_YEAR) as keyof typeof graduateClasses
-    ].all.find((classInfo) => classInfo.name === className);
-    if (classInfo) {
-      return classInfo;
-    } else {
-      return administrationTeam;
-    }
-  } else {
-    throw new ClientError(
-      { errorMessage: "Only student or teacher can access" },
-      HttpStatus.FORBIDDEN,
     );
   }
 }
