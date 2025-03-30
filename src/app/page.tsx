@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import calculateProgress from "@/modules/caculateProgress";
-import RouteProgressIndicator from "@/components/Home/RouteProgressIndicator"; // 更新的引入路徑
+import RouteProgressIndicator from "@/components/Home/RouteProgressIndicator";
 
 // Style
 import styles from "@/styles/Home/Home.module.css";
@@ -66,6 +66,111 @@ export default function HomePage() {
   // 計算總距離
   const totalDistance = totalLaps * 0.4;
 
+  // 為下方進度條計算基於實際距離的進度百分比
+  const calculateDistanceProgressPercentage = () => {
+    // 動態獲取起始和結束距離
+    if (!routeData || routeData.length < 2) {
+      return 0; // 如果沒有足夠的路線數據，返回0
+    }
+
+    // 從路線數據中找到最近的兩個點
+    let startPointIndex = 0;
+    let endPointIndex = 0;
+
+    // 找到當前所在的區間
+    for (let i = 0; i < routeData.length - 1; i++) {
+      const currentPointDistance = parseFloat(routeData[i].total);
+      const nextPointDistance = parseFloat(routeData[i + 1].total);
+
+      if (currentPointDistance <= totalDistance && totalDistance < nextPointDistance) {
+        startPointIndex = i;
+        endPointIndex = i + 1;
+        break;
+      }
+    }
+
+    // 如果已經超過了最後一個點
+    if (totalDistance >= parseFloat(routeData[routeData.length - 1].total)) {
+      startPointIndex = routeData.length - 2;
+      endPointIndex = routeData.length - 1;
+    }
+
+    // 如果還沒到第一個點
+    if (totalDistance < parseFloat(routeData[0].total)) {
+      startPointIndex = 0;
+      endPointIndex = 1;
+    }
+
+    // 獲取起始和結束點的距離
+    const startDistance = parseFloat(routeData[startPointIndex].total);
+    const endDistance = parseFloat(routeData[endPointIndex].total);
+
+    // 計算在給定範圍內的進度
+    if (totalDistance <= startDistance) {
+      return 0; // 還沒到起點
+    } else if (totalDistance >= endDistance) {
+      return 100; // 已經超過終點
+    } else {
+      // 計算在範圍內的百分比
+      const rangeProgress = ((totalDistance - startDistance) / (endDistance - startDistance)) * 100;
+      return rangeProgress;
+    }
+  };
+
+  // 獲取實際距離的進度百分比以及當前區間的起始和結束距離
+  const { percentage: distanceProgressPercentage, start: currentStartDistance, end: currentEndDistance } = (() => {
+    if (!routeData || routeData.length < 2) {
+      return { percentage: 0, start: 0, end: 0 };
+    }
+
+    // 找到當前所在的區間
+    let startPointIndex = 0;
+    let endPointIndex = 0;
+
+    for (let i = 0; i < routeData.length - 1; i++) {
+      const currentPointDistance = parseFloat(routeData[i].total);
+      const nextPointDistance = parseFloat(routeData[i + 1].total);
+
+      if (currentPointDistance <= totalDistance && totalDistance < nextPointDistance) {
+        startPointIndex = i;
+        endPointIndex = i + 1;
+        break;
+      }
+    }
+
+    // 如果已經超過了最後一個點
+    if (totalDistance >= parseFloat(routeData[routeData.length - 1].total)) {
+      startPointIndex = routeData.length - 2;
+      endPointIndex = routeData.length - 1;
+    }
+
+    // 如果還沒到第一個點
+    if (totalDistance < parseFloat(routeData[0].total)) {
+      startPointIndex = 0;
+      endPointIndex = 1;
+    }
+
+    // 獲取起始和結束點的距離
+    const startDistance = parseFloat(routeData[startPointIndex].total);
+    const endDistance = parseFloat(routeData[endPointIndex].total);
+
+    // 計算百分比
+    let percentage = 0;
+    if (totalDistance <= startDistance) {
+      percentage = 0;
+    } else if (totalDistance >= endDistance) {
+      percentage = 100;
+    } else {
+      percentage = ((totalDistance - startDistance) / (endDistance - startDistance)) * 100;
+    }
+
+    return {
+      percentage: percentage,
+      start: startDistance,
+      end: endDistance
+    };
+  })();
+
   return (
     <div>
       <div className={styles.progressWrapper}>
@@ -93,7 +198,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* 新增的路線進度指示器 */}
+            {/* 路線進度指示器 */}
             {routeData.length > 0 && (
               <RouteProgressIndicator
                 routes={routeData}
@@ -101,18 +206,19 @@ export default function HomePage() {
               />
             )}
 
+            {/* 修改後的距離進度條 - 使用動態獲取的起始和結束距離 */}
             <div className={styles.progressBarWrapper}>
               <div className={styles.progressBarLabel}>
-                {currentDistance.toLocaleString("zh-TW")} 公里
+                {currentStartDistance.toLocaleString("zh-TW")} 公里
               </div>
               <div className={styles.progressBarContainer}>
                 <div
                   className={styles.progressBar}
-                  style={{ width: `${progressPercentage}%` }}
+                  style={{ width: `${distanceProgressPercentage}%` }}
                 ></div>
               </div>
               <div className={styles.progressBarLabel}>
-                {nextDistance.toLocaleString("zh-TW")} 公里
+                {currentEndDistance.toLocaleString("zh-TW")} 公里
               </div>
             </div>
 
