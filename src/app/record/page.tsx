@@ -54,7 +54,11 @@ export default function RecordPage() {
                     title: "紀錄成功",
                     text: "回到首頁看看自己的班級線在第幾名吧!",
                     icon: "success",
+                    confirmButtonColor: "#1A348E",
                     confirmButtonText: "好的",
+                    denyButtonText: "返回首頁",
+                    showDenyButton: true,
+                    denyButtonColor: "#E7398E",
                     allowEscapeKey: false,
                     allowOutsideClick: false,
                     customClass: {
@@ -67,7 +71,7 @@ export default function RecordPage() {
                       left top
                       no-repeat
                     `,
-                    preConfirm: () => {
+                    preDeny: () => {
                         router.push("/");
                     }
                 });
@@ -76,7 +80,11 @@ export default function RecordPage() {
                     title: "紀錄失敗",
                     text: "系統發生錯誤，請稍後再嘗試！",
                     icon: "error",
+                    confirmButtonColor: "#1A348E",
                     confirmButtonText: "好的",
+                    denyButtonText: "返回首頁",
+                    showDenyButton: true,
+                    denyButtonColor: "#E7398E",
                     allowEscapeKey: false,
                     allowOutsideClick: false,
                     customClass: {
