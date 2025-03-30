@@ -8,8 +8,9 @@ export function middleware(request: NextRequest) {
   // if (shouldRedirect) {
   //   return response;
   // }
-
   // return response;
+  const host = request.nextUrl.host;
+  console.log(`host: ${host}`);
 }
 
 export const config = {
@@ -26,8 +27,6 @@ function generateMainHostRedirect({
   mainHost: string;
 }) {
   const host = request.nextUrl.host;
-  const path = request.nextUrl.pathname;
-  const search = request.nextUrl.search;
 
   const shouldIgnore = [...ignoreHosts, mainHost].some((pattern) => {
     const regex = typeof pattern === "string" ? new RegExp(pattern) : pattern;
@@ -35,7 +34,10 @@ function generateMainHostRedirect({
   });
 
   if (!shouldIgnore) {
+    const path = request.nextUrl.pathname;
+    const search = request.nextUrl.search;
     const redirectUrl = new URL(`https://${mainHost}${path}${search}`);
+
     return {
       shouldRedirect: true,
       response: NextResponse.redirect(redirectUrl),
