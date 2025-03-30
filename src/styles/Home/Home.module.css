@@ -395,3 +395,192 @@
         padding: 1.5rem;
     }
 }
+
+/* Add these to your existing Home.module.css file */
+
+/* Medium screens (tablets) */
+@media (max-width: 768px) {
+    .progressInfo {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .progressStat {
+        width: 48%;
+        margin-bottom: 1.5rem;
+    }
+
+    .progressTitle {
+        font-size: 1.6rem;
+    }
+
+    .progressStat h3 {
+        font-size: 1.1rem;
+    }
+
+    .progressStat p {
+        font-size: 1.8rem;
+    }
+
+    .progressBarContainer {
+        height: 25px;
+    }
+
+    .joinButton {
+        padding: 0.6rem 1.1rem;
+        font-size: 1.1rem;
+    }
+}
+
+/* Small screens (mobile phones) */
+@media (max-width: 480px) {
+    .progressSection {
+        padding: 1.2rem;
+    }
+
+    .progressInfo {
+        flex-direction: column;
+    }
+
+    .progressStat {
+        width: 100%;
+        margin-bottom: 1.2rem;
+        padding: 0.5rem;
+    }
+
+    .progressTitle {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .progressStat h3 {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .progressStat p {
+        font-size: 1.6rem;
+    }
+
+    .progressBarContainer {
+        height: 20px;
+        border-radius: 10px;
+    }
+
+    .progressBar {
+        border-radius: 10px;
+    }
+
+    .joinButton {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        margin-top: 1.5rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+    .progressTitle {
+        font-size: 1.3rem;
+    }
+
+    .progressStat h3 {
+        font-size: 0.9rem;
+    }
+
+    .progressStat p {
+        font-size: 1.4rem;
+    }
+
+    .progressBarContainer {
+        height: 15px;
+    }
+
+    .joinButton {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* 進度條外層容器，用於包裹進度條和兩側標籤 */
+.progressBarWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2rem 0 1rem;
+    width: 100%;
+}
+
+/* 進度條兩端的距離標籤 */
+.progressBarLabel {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+    min-width: 80px;
+}
+
+/* 確保進度條容器在兩個標籤之間有足夠的空間 */
+.progressBarContainer {
+    flex-grow: 1;
+    margin: 0 1rem;
+    height: 30px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* 保留原來的進度條樣式，但移除固定寬度設定 */
+.progressBar {
+    height: 100%;
+    background: linear-gradient(90deg, #1a3a8f 0%, #ff6bb3 100%);
+    border-radius: 15px;
+    transition: width 1.5s ease-in-out;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+    .progressBarWrapper {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .progressBarLabel {
+        font-size: 0.8rem;
+        min-width: 60px;
+    }
+
+    .progressBarContainer {
+        margin: 0 0.5rem;
+        height: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .progressBarWrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .progressBarContainer {
+        margin: 0.5rem 0;
+        height: 20px;
+    }
+
+    .progressBarLabel {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    /* 小屏幕上顯示為"起點"和"終點" */
+    .progressBarWrapper .progressBarLabel:first-child {
+        margin-bottom: 0.3rem;
+    }
+
+    .progressBarWrapper .progressBarLabel:last-child {
+        margin-top: 0.3rem;
+        text-align: right;
+    }
+}
