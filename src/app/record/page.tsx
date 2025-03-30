@@ -69,6 +69,29 @@ export default function RecordPage() {
                         router.push("/");
                     }
                 });
+            } else {
+                Swal.fire({
+                    title: "紀錄失敗",
+                    text: "系統發生錯誤，請稍後再嘗試！",
+                    icon: "error",
+                    confirmButtonText: "好的",
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    customClass: {
+                        container: "select-none",
+                    },
+                    focusConfirm: false,
+                    background: "#fff url(/images/trees.png)",
+                    backdrop: `
+                  rgba(0,0,123,0.4)
+                  url("/images/nyan-cat.gif")
+                  left top
+                  no-repeat
+                `,
+                    preConfirm: () => {
+                        router.push("/");
+                    }
+                });
             }
         });
 
@@ -270,36 +293,7 @@ export default function RecordPage() {
                                     <td className={styles.distance}>2</td>
                                     <td className={styles.className}>46</td>
                                 </tr>
-                                <tr>
-                                    <td>2025-03-26</td>
-                                    <td className={styles.distance}>2</td>
-                                    <td className={styles.className}>46</td>
-                                </tr>
-                                <tr>
-                                    <td>2025-03-24</td>
-                                    <td className={styles.distance}>2</td>
-                                    <td className={styles.className}>46</td>
-                                </tr>
-                                <tr>
-                                    <td>2025-03-22</td>
-                                    <td className={styles.distance}>1</td>
-                                    <td className={styles.className}>42</td>
-                                </tr>
-                                <tr>
-                                    <td>2025-03-20</td>
-                                    <td className={styles.distance}>3</td>
-                                    <td className={styles.className}>38</td>
-                                </tr>
-                                <tr>
-                                    <td>2025-03-18</td>
-                                    <td className={styles.distance}>2</td>
-                                    <td className={styles.className}>45</td>
-                                </tr>
-                                <tr>
-                                    <td>2025-03-16</td>
-                                    <td className={styles.distance}>1</td>
-                                    <td className={styles.className}>40</td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
