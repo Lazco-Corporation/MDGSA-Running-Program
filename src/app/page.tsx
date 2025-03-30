@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import calculateProgress from "@/modules/caculateProgress";
+import RouteProgressIndicator from "@/components/Home/RouteProgressIndicator"; // 更新的引入路徑
 
 // Style
 import styles from "@/styles/Home/Home.module.css";
@@ -12,33 +13,52 @@ import styles from "@/styles/Home/Home.module.css";
 import type { ListAllClassesResponse } from "@/app/api/class/list-all/types";
 
 // Config
-import routeConfig from "@/config/route";
+import route from "@/config/route";
+
+// 定義路線點類型
+interface RoutePoint {
+  name: string;
+  distance: string;
+  total: string;
+}
 
 export default function HomePage() {
-  const [listAllClasses, setListAllClasses] = useState<ListAllClassesResponse>();
+  const [listAllClasses, setListAllClasses] = useState<ListAllClassesResponse | undefined>();
   const [totalLaps, setTotalLaps] = useState<number>(0);
-  const [targetNow, setTargetNow] = useState("");
-  const [targetNext, setTargetNext] = useState("");
+  const [targetNow, setTargetNow] = useState<string>("");
+  const [targetNext, setTargetNext] = useState<string>("");
   const [currentDistance, setCurrentDistance] = useState<number>(0);
   const [nextDistance, setNextDistance] = useState<number>(0);
   const [progressPercentage, setProgressPercentage] = useState<number>(0);
+  const [routeData, setRouteData] = useState<RoutePoint[]>([]);
 
   useEffect(() => {
-    fetch("/api/class/list-all").then((res) => res.json()).then((data) => setListAllClasses(data));
-    fetch("/api/class/total-laps").then((res) => res.json()).then((data) => {
-      const laps = data.totalLaps;
-      const totalDistance = laps * 0.4;
-      const routeData = routeConfig();
-      const progress = calculateProgress(totalDistance, routeData);
+    // 獲取路線配置數據
+    const routes = route();
+    setRouteData(routes);
 
-      setTotalLaps(laps);
-      setTargetNow(progress.current);
-      setTargetNext(progress.next);
-      setCurrentDistance(progress.currentDistance);
-      setNextDistance(progress.nextDistance);
-      setProgressPercentage(progress.progressPercentage);
-    });
+    fetch("/api/class/list-all")
+      .then((res) => res.json())
+      .then((data: ListAllClassesResponse) => setListAllClasses(data));
+
+    fetch("/api/class/total-laps")
+      .then((res) => res.json())
+      .then((data: { totalLaps: number }) => {
+        const laps = data.totalLaps;
+        const totalDistance = laps * 0.4;
+        const progress = calculateProgress(totalDistance, routes);
+
+        setTotalLaps(laps);
+        setTargetNow(progress.current);
+        setTargetNext(progress.next);
+        setCurrentDistance(progress.currentDistance);
+        setNextDistance(progress.nextDistance);
+        setProgressPercentage(progress.progressPercentage);
+      });
   }, []);
+
+  // 計算總距離
+  const totalDistance = totalLaps * 0.4;
 
   return (
     <div>
@@ -50,7 +70,7 @@ export default function HomePage() {
               <div className={styles.progressStat}>
                 <h3>累計總里程</h3>
                 <p>
-                  {(totalLaps * 0.4).toLocaleString("zh-TW")} 公里
+                  {totalDistance.toLocaleString("zh-TW")} 公里
                 </p>
               </div>
               <div className={styles.progressStat}>
@@ -66,6 +86,14 @@ export default function HomePage() {
                 <p>55 班</p>
               </div>
             </div>
+
+            {/* 新增的路線進度指示器 */}
+            {routeData.length > 0 && (
+              <RouteProgressIndicator
+                routes={routeData}
+                totalDistance={totalDistance}
+              />
+            )}
 
             <div className={styles.progressBarWrapper}>
               <div className={styles.progressBarLabel}>
@@ -83,7 +111,7 @@ export default function HomePage() {
             </div>
 
             <Link href="/record" className={styles.joinButton}>
-              記錄我的跑步
+              記錄跑步
             </Link>
           </section>
         </div>
