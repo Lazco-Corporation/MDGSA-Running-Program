@@ -36,8 +36,8 @@ export default function RecordPage() {
         e.preventDefault();
         var data = JSON.stringify({
             "email": userData?.user?.email,
-            "laps": formData.laps,
-            "headcount": formData.people
+            "laps": Number(formData.laps),
+            "headcount": Number(formData.people)
         });
 
         fetch("/api/user/add-laps", {
@@ -252,58 +252,59 @@ export default function RecordPage() {
                     ))}
                 </div>
             </section>
-
-            <section className={styles.recentRecords}>
-                <h2 className={styles.recordsTitle}>跑步記錄</h2>
-                <div className={styles.tableContainer}>
-                    <table className={styles.recordsTable}>
-                        <thead>
-                            <tr>
-                                <th>登記日期</th>
-                                <th>圈數</th>
-                                <th>人數</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>2025-03-28</td>
-                                <td className={styles.distance}>2</td>
-                                <td className={styles.className}>46</td>
-                            </tr>
-                            <tr>
-                                <td>2025-03-26</td>
-                                <td className={styles.distance}>2</td>
-                                <td className={styles.className}>46</td>
-                            </tr>
-                            <tr>
-                                <td>2025-03-24</td>
-                                <td className={styles.distance}>2</td>
-                                <td className={styles.className}>46</td>
-                            </tr>
-                            <tr>
-                                <td>2025-03-22</td>
-                                <td className={styles.distance}>1</td>
-                                <td className={styles.className}>42</td>
-                            </tr>
-                            <tr>
-                                <td>2025-03-20</td>
-                                <td className={styles.distance}>3</td>
-                                <td className={styles.className}>38</td>
-                            </tr>
-                            <tr>
-                                <td>2025-03-18</td>
-                                <td className={styles.distance}>2</td>
-                                <td className={styles.className}>45</td>
-                            </tr>
-                            <tr>
-                                <td>2025-03-16</td>
-                                <td className={styles.distance}>1</td>
-                                <td className={styles.className}>40</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            {(!isLoading && status === "authenticated") && (
+                <section className={styles.recentRecords}>
+                    <h2 className={styles.recordsTitle}>跑步記錄</h2>
+                    <div className={styles.tableContainer}>
+                        <table className={styles.recordsTable}>
+                            <thead>
+                                <tr>
+                                    <th>登記日期</th>
+                                    <th>圈數</th>
+                                    <th>人數</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2025-03-28</td>
+                                    <td className={styles.distance}>2</td>
+                                    <td className={styles.className}>46</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-03-26</td>
+                                    <td className={styles.distance}>2</td>
+                                    <td className={styles.className}>46</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-03-24</td>
+                                    <td className={styles.distance}>2</td>
+                                    <td className={styles.className}>46</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-03-22</td>
+                                    <td className={styles.distance}>1</td>
+                                    <td className={styles.className}>42</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-03-20</td>
+                                    <td className={styles.distance}>3</td>
+                                    <td className={styles.className}>38</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-03-18</td>
+                                    <td className={styles.distance}>2</td>
+                                    <td className={styles.className}>45</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-03-16</td>
+                                    <td className={styles.distance}>1</td>
+                                    <td className={styles.className}>40</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            )}
         </div>
     );
 }
