@@ -41,7 +41,7 @@ const handler = NextAuth({
     async jwt({ token, account, profile }) {
       const email = profile?.email;
       if (!email) {
-        throw new Error("Invalid email");
+        return token;
       }
 
       const extendedToken = token as ExtendedNextAuthToken;
