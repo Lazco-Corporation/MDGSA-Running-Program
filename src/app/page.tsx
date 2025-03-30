@@ -16,13 +16,15 @@ import routeConfig from "@/config/route";
 export default function HomePage() {
   const [listAllClasses, setListAllClasses] = useState<ListAllClassesResponse>();
   const [totalLaps, setTotalLaps] = useState<number>(0);
-  const [route, setRoute] = useState(routeConfig());
+  const [route, setRoute] = useState<any>();
   const [targetNow, setTargetNow] = useState("");
   const [targetNext, setTargetNext] = useState("");
 
   useEffect(() => {
     fetch("/api/class/list-all").then((res) => res.json()).then((data) => setListAllClasses(data));
     fetch("/api/class/total-laps").then((res) => res.json()).then((data) => setTotalLaps(data.totalLaps));
+    setRoute(routeConfig())
+    
   }, []);
 
   return (
@@ -56,9 +58,9 @@ export default function HomePage() {
               <div className={styles.progressBar}></div>
             </div>
 
-            <p className={styles.progressMessage}>
+            {/* <p className={styles.progressMessage}>
               恭喜！我們已經環繞地球一圈了！下一站：月球（距離：384,400 公里）
-            </p>
+            </p> */}
 
             <Link href="/record" className={styles.joinButton}>
               記錄我的跑步
