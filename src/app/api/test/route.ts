@@ -1,56 +1,20 @@
 import { NextResponse } from "next/server";
 
 import { ClientError } from "@/modules/clientError";
-import { graduateClasses } from "@/modules/graduateClasses";
 import { HttpStatus } from "@/modules/http/statusCodes";
-import { mdApi } from "@/modules/mdApi";
 
 export async function GET() {
   try {
-    const userData = await mdApi.receiveUserData.email({
-      email: "",
+    const teapotAscii =
+      " _   _      _ _         _\n| | | | ___| | | ___   | |\n| |_| |/ _ \\ | |/ _ \\  | |\n|  _  |  __/ | | (_) | |_|\n|_| |_|\\___|_|_|\\___/  (_)\n ___ _                                _         _                         _     _ \n|_ _( )_ __ ___     __ _    ___ _   _| |_ ___  | |_ ___  __ _ _ __   ___ | |_  | |\n | ||/| '_ ` _ \\   / _` |  / __| | | | __/ _ \\ | __/ _ \\/ _` | '_ \\ / _ \\| __| | |\n | |  | | | | | | | (_| | | (__| |_| | ||  __/ | ||  __/ (_| | |_) | (_) | |_  |_|\n|___| |_| |_| |_|  \\__,_|  \\___|\\__,_|\\__\\___|  \\__\\___|\\__,_| .__/ \\___/ \\__| (_)\n                                                             |_|\n\n\n                        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣤\n                        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣘⣿⣿⣀⡀\n                        ⠀⠀⣀⣀⡀⠀⠀⠀⢀⣀⠘⠛⠛⠛⠛⠛⠛⠁⣀\n                        ⢠⡿⠋⠉⠛⠃⣠⣤⣈⣉⠻⠿⣿⣿⣿⣿⠿⠛⣉⣁⣤⣄⠀⠀⣾⣿⡿⠗\n                        ⢸⡇⠀⠀⠀⣰⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣿⣆⠀⣿⣿\n                        ⢸⣇⠀⠀⠀⣿⣿⣿⣿⣿⡇⣿⢸⣿⣿⡇⣿⢸⣿⣿⣿⠟⣉⣠⣿⣿⡀\n                        ⠀⠙⠷⡆⠘⣿⣿⣿⣿⣿⣿⣶⣿⣿⣿⣿⣶⣿⣿⣿⡇⣾⣿⣿⣿⣿⡇\n                        ⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⡿⢿⣿⣿⡿⢿⣿⣿⣿⣇⢻⣿⣿⣿⠟\n                        ⠀⠀⠀⠀⠀⠀⠙⠿⣿⣿⣿⣿⣶⣤⣤⣶⣿⣿⣿⣿⠿⠂⠉⠁\n                        ⠀⠀⠀⠀⠀⠀⠀⠀⢄⣉⠉⠛⠛⠛⠛⠛⠋⢉⣉⡠\n                        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⠿⠿⠿⠿⠿⠿⠛⠋⠁\n";
+
+    return new Response(teapotAscii, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+      status: HttpStatus.IM_A_TEAPOT,
+      statusText: "I'm a teapot",
     });
-
-    if (userData?.userIdentity === "stu") {
-      const className = userData.className;
-
-      const classInfo = graduateClasses[2025].all.find(
-        (classInfo) => classInfo.name === className,
-      );
-      if (classInfo) {
-        return NextResponse.json({
-          userData,
-          classInfo,
-        });
-      } else {
-        throw new ClientError(
-          { errorMessage: "Not graduate class" },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-    } else if (userData?.userIdentity === "teach") {
-      const className = userData.className;
-
-      const classInfo = graduateClasses[2025].all.find(
-        (classInfo) => classInfo.name === className,
-      );
-      if (classInfo) {
-        return NextResponse.json({
-          userData,
-          classInfo,
-        });
-      } else {
-        throw new ClientError(
-          { errorMessage: "Not teacher of graduate class" },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-    } else {
-      throw new ClientError(
-        { errorMessage: "Only student or teacher can access" },
-        HttpStatus.FORBIDDEN,
-      );
-    }
   } catch (error) {
     if (error instanceof ClientError) {
       return NextResponse.json(error.payload, { status: error.code || 500 });
@@ -58,7 +22,7 @@ export async function GET() {
 
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 },
+      { status: HttpStatus.INTERNAL_SERVER_ERROR },
     );
   }
 }

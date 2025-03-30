@@ -27,7 +27,12 @@ export async function GET() {
         createdAt: classInfo.createdAt,
         updatedAt: classInfo.updatedAt,
       }))
-      .sort((a, b) => b.laps - a.laps);
+      .sort((a, b) => {
+        if (a.laps !== b.laps) {
+          return b.laps - a.laps;
+        }
+        return b.updatedAt - a.updatedAt;
+      });
 
     return NextResponse.json({
       allClasses: formattedAllClasses,
