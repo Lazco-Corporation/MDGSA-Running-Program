@@ -1,13 +1,14 @@
 // @/modules/caculateProgress/index.ts
 
 // 定義路線點的類型
-interface RoutePoint {
+export interface RoutePoint {
   name: string;
   distance: string;
+  total: string;
 }
 
 // 定義進度返回值的類型
-interface ProgressResult {
+export interface ProgressResult {
   current: string;
   next: string;
   currentDistance: number;
@@ -39,16 +40,16 @@ function calculateProgress(totalDistance: number, routes: RoutePoint[]): Progres
       current: routes[0].name,
       next: routes.length > 1 ? routes[1].name : "",
       currentDistance: 0,
-      nextDistance: routes.length > 1 ? parseFloat(routes[1].distance) : 0,
+      nextDistance: routes.length > 1 ? parseFloat(routes[1].total) : 0,
       progressPercentage: 0
     };
   }
 
   // 找出當前位置和下一個目標
-  let currentIndex = 0;
+  let currentIndex: number = 0;
   
   for (let i = 0; i < routes.length; i++) {
-    if (parseFloat(routes[i].distance) <= totalDistance) {
+    if (parseFloat(routes[i].total) <= totalDistance) {
       currentIndex = i;
     } else {
       break;
@@ -56,27 +57,27 @@ function calculateProgress(totalDistance: number, routes: RoutePoint[]): Progres
   }
 
   // 計算當前位置
-  const current = routes[currentIndex].name;
-  const currentDistance = parseFloat(routes[currentIndex].distance);
+  const current: string = routes[currentIndex].name;
+  const currentDistance: number = parseFloat(routes[currentIndex].total);
   
   // 計算下一個目標
-  const hasNextTarget = currentIndex < routes.length - 1;
-  const next = hasNextTarget ? routes[currentIndex + 1].name : "已到達終點";
-  const nextDistance = hasNextTarget ? parseFloat(routes[currentIndex + 1].distance) : currentDistance;
+  const hasNextTarget: boolean = currentIndex < routes.length - 1;
+  const next: string = hasNextTarget ? routes[currentIndex + 1].name : "已到達終點";
+  const nextDistance: number = hasNextTarget ? parseFloat(routes[currentIndex + 1].total) : currentDistance;
   
   // 計算進度百分比
-  let progressPercentage = 0;
+  let progressPercentage: number = 0;
   
   if (hasNextTarget) {
     // 計算從當前點到下一個點的進度百分比
-    const segmentDistance = nextDistance - currentDistance;
-    const progressInSegment = totalDistance - currentDistance;
+    const segmentDistance: number = nextDistance - currentDistance;
+    const progressInSegment: number = totalDistance - currentDistance;
     
     if (segmentDistance > 0) {
       // 計算在當前段落的進度比例
-      const segmentProgress = progressInSegment / segmentDistance;
+      const segmentProgress: number = progressInSegment / segmentDistance;
       // 限制在 0-1 之間
-      const clampedSegmentProgress = Math.min(1, Math.max(0, segmentProgress));
+      const clampedSegmentProgress: number = Math.min(1, Math.max(0, segmentProgress));
       
       // 計算整體進度百分比
       // 公式: (當前點的索引 + 當前段進度) / (總點數 - 1) * 100
