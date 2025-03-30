@@ -64,8 +64,8 @@ export async function POST(request: Request) {
         metadata: {
           processingTimeMs: Date.now() - requestStartTime,
           headcount,
-          addedLaps: laps * headcount,
-          totalLaps: classData.laps,
+          laps,
+          totalAddedLaps: laps * headcount,
         },
         status: "success",
       },
