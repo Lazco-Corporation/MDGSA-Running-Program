@@ -40,5 +40,8 @@
       "@firebase/util",
       "protobufjs"
     ]
+  },
+  "engines": {
+    "node": "22.14.0"
   }
 }
