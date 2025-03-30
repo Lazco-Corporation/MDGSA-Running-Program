@@ -35,6 +35,46 @@
     margin: 0 auto;
 }
 
+.formWrapper {
+    display: flex;
+    text-align: center;
+}
+
+.formGroup {
+    flex: 1;
+}
+
+.formInput {
+    border-radius: 16px !important;
+    font-size: 5rem !important;
+    text-align: center;
+    color: #1a3a8f;
+    width: 8rem !important;
+    height: 8rem !important;
+}
+
+.formLabel {
+    font-size: 2rem;
+}
+
+.formGroup input[type="number"] {
+    -moz-appearance: textfield;
+    /* Firefox */
+}
+
+/* Chrome, Safari, Edge, Opera */
+.formGroup input[type="number"]::-webkit-outer-spin-button,
+.formGroup input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* 如果只想隱藏但保留功能，可以使用這種替代方法 */
+.formGroup input[type="number"].hideArrows::-webkit-inner-spin-button,
+.formGroup input[type="number"].hideArrows::-webkit-outer-spin-button {
+    opacity: 0;
+}
+
 /* 用戶信息樣式 */
 .userInfo {
     display: flex;
