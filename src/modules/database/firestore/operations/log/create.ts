@@ -1,5 +1,7 @@
+import { ClientError } from "@/modules/clientError";
+import { HttpStatus } from "@/modules/http/statusCodes";
 import { firestoreService } from "../../firestoreService";
-import { LogEntry } from "../../types/LogEntry";
+import { LogEntry, LogResourceId, LogResourceType } from "../../types/Log";
 
 export type AddLogEntryOptions = {
   resourceType: LogResourceType;
@@ -30,17 +32,12 @@ export async function createByResourceTypeAndResourceId({
     await logDocRef.set(logEntry);
 
     return logDocRef.id;
-  } catch (error) {
-    console.error("Failed to create log entry:", error);
-
-    return null;
+  } catch (_error) {
+    throw new ClientError(
+      {
+        errorMessage: "Failed to fetch classes",
+      },
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
-}
-
-export enum LogResourceType {
-  BACKEND = "backend",
-}
-
-export enum LogResourceId {
-  USER_ADD_LAPS = "user-add-laps",
 }

@@ -7,7 +7,7 @@ import { firestoreOperation } from "@/modules/database/firestore";
 import {
   LogResourceId,
   LogResourceType,
-} from "@/modules/database/firestore/operations/log/create";
+} from "@/modules/database/firestore/types/Log";
 import { recordLogEntry } from "@/modules/recordLogEntry";
 import { getGraduateClassInfo } from "@/modules/getGraduateClassInfo";
 import { AddLapsRequestSchema, AddLapsResponse } from "./types";

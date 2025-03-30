@@ -2,6 +2,7 @@ import { getByGraduateYearAndGlobalCode } from "./operations/class/get";
 import { listAll } from "./operations/class/list";
 import { upsertByGraduateYearAndGlobalCode } from "./operations/class/upsert";
 import { createByResourceTypeAndResourceId } from "./operations/log/create";
+import { listByResourceTypeAndResourceId } from "./operations/log/list";
 
 export const firestoreOperation = {
   class: {
@@ -19,6 +20,8 @@ export const firestoreOperation = {
     create: {
       byResourceTypeAndResourceId: createByResourceTypeAndResourceId,
     },
-    list: {},
+    list: {
+      byResourceTypeAndResourceId: listByResourceTypeAndResourceId,
+    },
   },
 };
