@@ -31,6 +31,7 @@ export default function HomePage() {
   const [nextDistance, setNextDistance] = useState<number>(0);
   const [progressPercentage, setProgressPercentage] = useState<number>(0);
   const [routeData, setRouteData] = useState<RoutePoint[]>([]);
+  const [graduateQuantity, setGraduateQuantity] = useState<number>(0);
 
   useEffect(() => {
     // 獲取路線配置數據
@@ -55,6 +56,11 @@ export default function HomePage() {
         setNextDistance(progress.nextDistance);
         setProgressPercentage(progress.progressPercentage);
       });
+
+    fetch("/api/class/graduate-quantity")
+      .then((res) => res.json())
+      .then((data: { graduateClassesQuantity: number }) => setGraduateQuantity(data.graduateClassesQuantity));
+
   }, []);
 
   // 計算總距離
@@ -83,7 +89,7 @@ export default function HomePage() {
               </div>
               <div className={styles.progressStat}>
                 <h3>畢業班數量</h3>
-                <p>55 班</p>
+                <p>{graduateQuantity} 班</p>
               </div>
             </div>
 
