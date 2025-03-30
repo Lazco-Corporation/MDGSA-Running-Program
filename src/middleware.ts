@@ -29,7 +29,7 @@ function generateMainHostRedirect({
   const path = request.nextUrl.pathname;
   const search = request.nextUrl.search;
 
-  const shouldIgnore = ignoreHosts.some((pattern) => {
+  const shouldIgnore = [...ignoreHosts, mainHost].some((pattern) => {
     const regex = typeof pattern === "string" ? new RegExp(pattern) : pattern;
     return regex.test(host);
   });
