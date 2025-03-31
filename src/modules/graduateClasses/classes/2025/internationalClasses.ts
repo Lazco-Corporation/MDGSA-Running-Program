@@ -14,12 +14,6 @@ export const internationalClasses: ClassInfo[] = [
     globalCode: "Y3G2",
   },
   {
-    code: "G09103",
-    name: "國際903",
-    value: "G09103@Y3G3",
-    globalCode: "Y3G3",
-  },
-  {
     code: "G12101",
     name: "國際1201",
     value: "G12101@X3G1",
