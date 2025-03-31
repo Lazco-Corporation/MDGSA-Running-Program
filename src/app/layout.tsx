@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     ],
     shortcut: { url: "/icons/favicon-32x32.png" },
   },
-  creator: "明道中學畢業班級聯合會",
+  creator: "明道中學畢業班級聯誼會",
   publisher: "明道中學",
   openGraph: {
     type: "website",

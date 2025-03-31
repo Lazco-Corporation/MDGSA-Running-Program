@@ -257,7 +257,11 @@ export default function HomePage() {
                       {(classItem.laps * 0.4).toLocaleString("zh-TW")}{" "}
                       公里
                     </td>
-                    <td>{((classItem.laps * 0.4) / 45).toFixed(2)} 公里</td>
+                    <td>
+                      {classItem.name === "行政團隊"
+                        ? "都很努力🙂‍↕️"
+                        : `${((classItem.laps * 0.4) / 45).toFixed(2)} 公里`}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -274,33 +278,34 @@ export default function HomePage() {
             <div className={styles.featuresGrid}>
               <div className={styles.featureCard}>
                 <div className={styles.featureIcon}>🏃</div>
-                <h3 className={styles.featureTitle}>個人成長</h3>
+                <h3 className={styles.featureTitle}>計分方式</h3>
                 <p className={styles.featureDescription}>
-                  每一步都是自我突破，記錄個人成長歷程，挑戰自己的極限。
+                  統計每個班級每位同學的跑步圈數，依照總公里數進行班級排名。
                 </p>
               </div>
 
-              <div className={styles.featureCard}>
+              {/* <div className={styles.featureCard}>
                 <div className={styles.featureIcon}>🤝</div>
-                <h3 className={styles.featureTitle}>團隊合作</h3>
+                <h3 className={styles.featureTitle}>加碼挑戰</h3>
                 <p className={styles.featureDescription}>
-                  班級共同努力，累積里程，培養團隊合作精神與集體榮譽感。
+                  高級部舉辦大隊接力賽，各班組隊挑戰接力跑。<br />
+                  國中部設計趣味闖關活動，累積額外圈數。
                 </p>
-              </div>
+              </div> */}
 
               <div className={styles.featureCard}>
                 <div className={styles.featureIcon}>🌍</div>
-                <h3 className={styles.featureTitle}>全球視野</h3>
+                <h3 className={styles.featureTitle}>總里程累積</h3>
                 <p className={styles.featureDescription}>
-                  透過虛擬旅程，環繞地球甚至到達太空，拓展學生的國際視野。
+                  全校總圈數將轉換為總公里數，挑戰設定的里程目標。
                 </p>
               </div>
 
               <div className={styles.featureCard}>
                 <div className={styles.featureIcon}>🏆</div>
-                <h3 className={styles.featureTitle}>健康生活</h3>
+                <h3 className={styles.featureTitle}>獎勵機制</h3>
                 <p className={styles.featureDescription}>
-                  養成規律運動習慣，促進身心健康，建立積極正向的生活態度。
+                  全校總公里數達標即可解鎖對應獎勵，表現優異的班級會獲得額外榮譽獎項。
                 </p>
               </div>
             </div>
