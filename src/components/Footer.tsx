@@ -43,7 +43,7 @@ export default function Footer3() {
                                     rel="noreferrer"
                                     className={styles.link}
                                 >
-                                    葉伯辰
+                                    葉柏辰
                                 </a>
                             </p>
                         </div>
