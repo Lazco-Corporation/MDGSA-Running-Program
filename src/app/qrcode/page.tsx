@@ -13,7 +13,7 @@ export default function Page() {
 
 const QRCodeWithLogo = () => {
     const [url, setUrl] = useState('https://run.mingdao.edu.tw');
-    const [logo, setLogo] = useState<string | null>('/images/icon-04.png'); // 預設徽標路徑
+    const [logo, setLogo] = useState<string | null>('/icons/icon.png'); // 預設徽標路徑
     const [qrCodeSvg, setQrCodeSvg] = useState('');
     const [finalQrCode, setFinalQrCode] = useState('');
     const [qrColor, setQrColor] = useState('#1A348E'); // 更新為大寫顏色代碼，確保一致性

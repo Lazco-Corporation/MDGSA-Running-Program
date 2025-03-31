@@ -56,14 +56,14 @@ export const metadata: Metadata = {
     title: "為夢想而跑",
     description: "與畢業生和師長們一同累積里程、挑戰排行榜、超越極限！每一步都帶你更接近夢想，每一公里都讓畢業更有意義！",
     images: [{
-      url: "https://run.mingdao.edu.tw/images/banner.jpg",
+      url: "https://run.mingdao.edu.tw/banners/banner-compressed.jpg",
     }],
   },
   twitter: {
     title: "為夢想而跑",
     description: "與畢業生和師長們一同累積里程、挑戰排行榜、超越極限！每一步都帶你更接近夢想，每一公里都讓畢業更有意義！",
     card: "summary_large_image",
-    images: "https://run.mingdao.edu.tw/images/banner.jpg"
+    images: "https://run.mingdao.edu.tw/banners/banner-compressed.jpg"
   },
   other: {
     "twitter:url": "https://run.mingdao.edu.tw"
