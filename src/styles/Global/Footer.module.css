@@ -1,5 +1,6 @@
 /* 基本樣式 */
 .footer {
+<<<<<<< HEAD
     background-color: #1a3a8f;
     color: white;
 }
@@ -101,4 +102,25 @@
         width: 50%;
         margin: 0 auto;
     }
+=======
+  background-color: #1a3a8f;
+  color: white;
+  text-align: center;
+  padding: 2.5rem 1rem 0.9rem 1rem;
+  font-size: 1rem;
+}
+
+.footer>div>div {
+  margin-bottom: 1rem;
+}
+
+.footer a {
+  /* color: #ffa2cf; */
+  text-decoration: underline;
+}
+
+.copyright {
+  margin-top: 2.3rem;
+  font-size: 0.8rem;
+>>>>>>> 10f302c4c7bf3705ae3e83e30311bf4271befeca
 }
