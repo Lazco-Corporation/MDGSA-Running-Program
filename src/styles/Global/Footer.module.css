@@ -1,11 +1,21 @@
 .footer {
-    background-color: #1a3a8f;
-    color: white;
+  background-color: #1a3a8f;
+  color: white;
+  text-align: center;
+  padding: 2.5rem 1rem 0.9rem 1rem;
+  font-size: 1rem;
+}
 
+.footer>div>div {
+  margin-bottom: 1rem;
+}
+
+.footer a {
+  /* color: #ffa2cf; */
+  text-decoration: underline;
 }
 
 .copyright {
-    text-align: center;
-    padding: 1.5rem;
-    font-size: 1rem;
+  margin-top: 2.3rem;
+  font-size: 0.8rem;
 }
