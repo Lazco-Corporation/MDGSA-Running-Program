@@ -209,6 +209,7 @@ export default function HomePage() {
             {/* 修改後的距離進度條 - 使用動態獲取的起始和結束距離 */}
             <div className={styles.progressBarWrapper}>
               <div className={styles.progressBarLabel}>
+                <p>{targetNow}</p>
                 {currentStartDistance.toLocaleString("zh-TW")} 公里
               </div>
               <div className={styles.progressBarContainer}>
@@ -218,6 +219,7 @@ export default function HomePage() {
                 ></div>
               </div>
               <div className={styles.progressBarLabel}>
+                <p>{targetNext}</p>
                 {currentEndDistance.toLocaleString("zh-TW")} 公里
               </div>
             </div>

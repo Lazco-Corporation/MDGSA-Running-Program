@@ -98,7 +98,7 @@
 }
 
 .progressStat p {
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: #1a3a8f;
     font-weight: bold;
 }
@@ -172,6 +172,8 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -397,7 +399,7 @@
     }
 
     .progressStat p {
-        font-size: 1.8rem;
+        font-size: 2.4rem;
     }
 
     .progressBarContainer {
@@ -440,7 +442,7 @@
     }
 
     .progressStat p {
-        font-size: 1.6rem;
+        font-size: 2.3rem;
     }
 
     .progressBarContainer {
@@ -470,7 +472,7 @@
     }
 
     .progressStat p {
-        font-size: 1.4rem;
+        font-size: 2rem;
     }
 
     .progressBarContainer {
@@ -495,10 +497,15 @@
 
 /* 進度條兩端的距離標籤 */
 .progressBarLabel {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: #666;
-    min-width: 80px;
+    min-width: 115px;
+}
+
+.progressBarLabel p {
+    font-size: 1rem;
+    color: #1a3a8f;
 }
 
 /* 確保進度條容器在兩個標籤之間有足夠的空間 */
@@ -577,7 +584,7 @@
 }
 
 .routeIndicatorContent {
-    min-width: 600px;
+    min-width: 800px;
     padding: 1.5rem 1rem;
     position: relative;
 }
