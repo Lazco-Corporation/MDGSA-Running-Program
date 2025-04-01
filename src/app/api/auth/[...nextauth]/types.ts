@@ -8,6 +8,7 @@ type CustomExtendedData = {
   isGraduateClass: boolean;
   belongsToMingdao: boolean;
   userAttributes?: GoogleUserCheckResponse;
+  isBanned: boolean;
 };
 export type ExtendedNextAuthToken = JWT & CustomExtendedData;
 export type ExtendedNextAuthSession = Session & CustomExtendedData;

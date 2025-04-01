@@ -9,6 +9,7 @@ import {
   ExtendedNextAuthToken,
   ExtendedNextAuthSession,
 } from "@/app/api/auth/[...nextauth]/types";
+import { isBanned } from "./isBanned";
 
 export const nextAuthOptions: NextAuthOptions = {
   secret:
@@ -38,12 +39,6 @@ export const nextAuthOptions: NextAuthOptions = {
         return false;
       }
 
-      const bannedStudentIds = ["11v176", "11v342", "11v496"];
-
-      if (bannedStudentIds.includes(profile.email.split("@")[0])) {
-        return false;
-      }
-
       return true;
     },
 
@@ -57,6 +52,8 @@ export const nextAuthOptions: NextAuthOptions = {
 
       if (account) {
         extendedToken.accessToken = account.access_token;
+
+        extendedToken.isBanned = isBanned(email);
 
         const userData = await mdApi.receiveUserData
           .email({ email })
@@ -96,12 +93,18 @@ export const nextAuthOptions: NextAuthOptions = {
       const extendedSession = session as ExtendedNextAuthSession;
       const extendedToken = token as ExtendedNextAuthToken;
 
-      const { accessToken, isGraduateClass, belongsToMingdao, userAttributes } =
-        extendedToken;
+      const {
+        accessToken,
+        isGraduateClass,
+        belongsToMingdao,
+        userAttributes,
+        isBanned,
+      } = extendedToken;
       extendedSession.accessToken = accessToken;
       extendedSession.isGraduateClass = isGraduateClass;
       extendedSession.belongsToMingdao = belongsToMingdao;
       extendedSession.userAttributes = userAttributes;
+      extendedSession.isBanned = isBanned;
 
       return extendedSession;
     },

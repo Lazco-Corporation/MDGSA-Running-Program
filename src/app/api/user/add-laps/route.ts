@@ -11,6 +11,7 @@ import {
 import { recordLogEntry } from "@/modules/recordLogEntry";
 import { getGraduateClassInfo } from "@/modules/getGraduateClassInfo";
 import { requestHandler } from "@/modules/requestHandler";
+import { isBanned } from "@/modules/nextAuth/isBanned";
 import { AddLapsRequestSchema, AddLapsResponse } from "./types";
 
 export const POST = requestHandler.withAuth(async (request: Request) => {
@@ -32,12 +33,10 @@ export const POST = requestHandler.withAuth(async (request: Request) => {
 
     const { email, laps, headcount } = parsedResult.data;
 
-    const bannedStudentIds = ["11v176", "11v342", "11v496"];
-
-    if (bannedStudentIds.includes(email.split("@")[0])) {
+    if (isBanned(email)) {
       throw new ClientError(
         {
-          errorObject: { email },
+          errorObject: { isBanned: true },
           errorMessage: "User is banned",
         },
         HttpStatus.FORBIDDEN,
