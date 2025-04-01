@@ -32,6 +32,18 @@ export const POST = requestHandler.withAuth(async (request: Request) => {
 
     const { email, laps, headcount } = parsedResult.data;
 
+    const bannedStudentIds = ["11v176", "11v342", "11v496"];
+
+    if (bannedStudentIds.includes(email.split("@")[0])) {
+      throw new ClientError(
+        {
+          errorObject: { email },
+          errorMessage: "User is banned",
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     const userData = await mdApi.receiveUserData.email({
       email,
     });
