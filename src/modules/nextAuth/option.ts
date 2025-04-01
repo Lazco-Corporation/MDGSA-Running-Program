@@ -38,6 +38,12 @@ export const nextAuthOptions: NextAuthOptions = {
         return false;
       }
 
+      const bannedStudentIds = ["11v176", "11v342", "11v496"];
+
+      if (bannedStudentIds.includes(profile.email.split("@")[0])) {
+        return false;
+      }
+
       return true;
     },
 
