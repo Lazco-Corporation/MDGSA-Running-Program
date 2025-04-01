@@ -145,7 +145,7 @@ export default function RecordPage() {
                   no-repeat
                 `,
                 preConfirm: () => {
-                    signOut({ callbackUrl: "https://www.youtube.com/watch?v=Hm6ZTPjJzlA" });
+                    signOut({ callbackUrl: "https://www.youtube.com/watch?v=qXwt67lyhsM" });
                 }
             });
         }
