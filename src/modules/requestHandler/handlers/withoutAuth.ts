@@ -7,7 +7,7 @@ import { RouteHandler as RequestHandler } from "..";
 export function requestHandlerWithoutAuth(handler: RequestHandler) {
   return async (request: NextRequest, params?: any) => {
     try {
-      return handler(request, params);
+      return await handler(request, params);
     } catch (error) {
       if (error instanceof ClientError) {
         return NextResponse.json(error.payload, { status: error.code || 500 });

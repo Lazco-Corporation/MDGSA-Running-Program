@@ -23,7 +23,7 @@ export function requestHandlerWithAuth(handler: RequestHandler) {
         );
       }
 
-      return handler(request, params);
+      return await handler(request, params);
     } catch (error) {
       if (error instanceof ClientError) {
         return NextResponse.json(error.payload, { status: error.code || 500 });
