@@ -1,19 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const { shouldRedirect, response } = generateMainHostRedirect({
-    request,
-    mainHost: "run.mingdao.edu.tw",
-  });
-  if (shouldRedirect) {
-    return response;
+  if (request.nextUrl.pathname !== "/maintaining") {
+    return NextResponse.redirect(new URL("/maintaining", request.url));
   }
 
-  return response;
+  // const { shouldRedirect, response } = generateMainHostRedirect({
+  //   request,
+  //   mainHost: "run.mingdao.edu.tw",
+  // });
+
+  // if (shouldRedirect) {
+  //   return response;
+  // }
+
+  // return response;
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|banners|icons|images|logos).*)"],
 };
 
 function generateMainHostRedirect({

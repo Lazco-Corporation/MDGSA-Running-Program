@@ -1,0 +1,25 @@
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 77px);
+}
+
+.center h1 {
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .center h1 {
+    font-size: 1.65rem;
+  }
+}
+
+.center img {
+  border-radius: 40px;
+  max-width: 320px;
+  height: auto;
+}
