@@ -1,13 +1,22 @@
 import { ClientError } from "@/modules/clientError";
 import { HttpStatus } from "@/modules/http/statusCodes";
+import { defaultCache } from "@/modules/cache";
 import { firestoreService } from "../../firestoreService";
 import { Class, ClassSchema } from "../../types/Class";
 
+const CACHE_KEY = "firestoreOperation:class:listAll";
+
 export async function listAll(): Promise<Class[]> {
+  const cachedClasses = defaultCache.get<Class[]>(CACHE_KEY);
+  if (cachedClasses) {
+    return cachedClasses;
+  }
+
   try {
     const classesSnapshot = await firestoreService.collection("classes").get();
 
     if (classesSnapshot.empty) {
+      defaultCache.set(CACHE_KEY, []);
       return [];
     }
 
@@ -25,6 +34,8 @@ export async function listAll(): Promise<Class[]> {
 
       return ClassSchema.parse(classData);
     });
+
+    defaultCache.set(CACHE_KEY, classes);
 
     return classes;
   } catch (_error) {
