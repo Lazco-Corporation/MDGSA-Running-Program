@@ -124,12 +124,38 @@ export default function RecordPage() {
     }, [status, session]);
 
     useEffect(() => {
+        if (userData?.isBanned === true) {
+            Swal.fire({
+                title: "登入失敗",
+                text: "因系統偵測到您有違規行為，您的帳號已被永久封禁!",
+                icon: "error",
+                confirmButtonText: "好的",
+                confirmButtonColor: "#1A348E",
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                customClass: {
+                    container: "select-none",
+                },
+                focusConfirm: false,
+                background: "#fff url(/images/trees.png)",
+                backdrop: `
+                  rgba(0,0,123,0.4)
+                  url("/images/nyan-cat.gif")
+                  left top
+                  no-repeat
+                `,
+                preConfirm: () => {
+                    signOut({ callbackUrl: "https://www.youtube.com/watch?v=qXwt67lyhsM" });
+                }
+            });
+        }
         if (userData?.belongsToMingdao === false) {
             Swal.fire({
                 title: "登入失敗",
                 text: "您必須使用明道中學所配發的帳號才能登入!",
                 icon: "error",
                 confirmButtonText: "好的",
+                confirmButtonColor: "#1A348E",
                 allowEscapeKey: false,
                 allowOutsideClick: false,
                 customClass: {
@@ -155,6 +181,7 @@ export default function RecordPage() {
                 text: "您必須是應屆畢業生或學校老師才能登入!",
                 icon: "error",
                 confirmButtonText: "好的",
+                confirmButtonColor: "#1A348E",
                 allowEscapeKey: false,
                 allowOutsideClick: false,
                 customClass: {
