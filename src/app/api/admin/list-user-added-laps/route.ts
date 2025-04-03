@@ -28,7 +28,7 @@ export const POST = requestHandler.withBackendAdminAuth(
       );
     }
 
-    const { email } = parsedResult.data;
+    const { email, status } = parsedResult.data;
 
     const logEntries =
       await firestoreOperation.log.list.byResourceTypeAndResourceId({
@@ -38,11 +38,16 @@ export const POST = requestHandler.withBackendAdminAuth(
       });
 
     const addedLaps = logEntries
-      .filter((logEntry) => logEntry.status === "success")
+      .filter((logEntry) => logEntry.status === status)
       .map((logEntry) => ({
+        id: logEntry.id,
         timestamp: logEntry.timestamp,
+        readableTimestamp: formatDateToChineseUTC8(
+          new Date(logEntry.timestamp),
+        ),
         laps: logEntry.metadata?.laps ?? 0,
         headcount: logEntry.metadata?.headcount ?? 0,
+        totalAddedLaps: logEntry.metadata?.totalAddedLaps ?? 0,
       }));
 
     return NextResponse.json({
@@ -52,3 +57,19 @@ export const POST = requestHandler.withBackendAdminAuth(
 );
 
 export const GET = POST;
+
+function formatDateToChineseUTC8(date: Date): string {
+  const formatter = new Intl.DateTimeFormat("zh-TW", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "long",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: false,
+  });
+
+  return formatter.format(date);
+}
