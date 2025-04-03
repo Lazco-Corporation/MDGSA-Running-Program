@@ -4,6 +4,7 @@ const DEFAULT_EXPIRATION_MS = 5 * 60 * 1000;
 
 export class CacheService {
   private cache: Map<string, CacheEntry<any>>;
+  private noCache = Boolean(process.env.NO_CACHE);
   private expirationMs: number;
 
   constructor(expirationMs: number = DEFAULT_EXPIRATION_MS) {
@@ -17,13 +18,28 @@ export class CacheService {
    * @returns True if the cache entry is valid, false otherwise
    */
   public isValid(key: string): boolean {
+    if (this.noCache) {
+      console.warn(`cache: [${key}] cache is disabled`);
+      return false;
+    }
+
     const entry = this.cache.get(key);
     if (!entry) {
       return false;
     }
 
     const now = Date.now();
-    return now - entry.timestamp < this.expirationMs;
+    const expired = now - entry.timestamp > this.expirationMs;
+    if (expired) {
+      console.warn(
+        `cache: [${key}] cache is expired, past time: ${now - entry.timestamp}ms`,
+      );
+      return false;
+    }
+    console.info(
+      `cache: [${key}] cache is valid, remaining time: ${this.expirationMs - (now - entry.timestamp)}ms`,
+    );
+    return true;
   }
 
   /**
