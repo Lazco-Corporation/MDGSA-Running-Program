@@ -36,6 +36,19 @@ export function isBanned(email: string) {
     "11s398",
     "11s354",
     "11v826",
+    "11v225",
+    "11v177",
+    "11v170",
+    "11v139",
+    "11v188",
+    "11v209",
+    "11v521",
+    "11v398",
+    "11v181",
+    "11v466",
+    "11v529",
+    "11v318",
+    "11v071",
   ]);
 
   if (Array.from(bannedStudentIds).includes(email.split("@")[0])) {
